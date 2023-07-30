@@ -18,6 +18,8 @@ set(PROJECT_SOURCES
         MainWindow.cpp
         MainWindow.hpp
         MainWindow.ui
+        UdpNode.cpp
+        UdpNode.hpp
         resource.qrc
         ${TS_FILES}
 )

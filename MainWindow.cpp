@@ -96,4 +96,5 @@ void MainWindow::connectButtonSignalsToSlots()
 void MainWindow::handleButtons(QString textToShow)
 {
     ui->plainTextEdit->setPlainText(textToShow);
+    udpNode->sendMessage();
 }

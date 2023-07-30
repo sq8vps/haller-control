@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UdpNode.hpp"
+
 #include <QMainWindow>
 #include <QWidget>
 #include <QTextEdit>
@@ -25,5 +27,6 @@ private:
     void setButtonIcons();
     void connectButtonSignalsToSlots();
 
+    UdpNode *udpNode;
     Ui::MainWindow *ui;
 };
