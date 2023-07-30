@@ -7,7 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
+
     setWindowTitle(tr("Haller control panel"));
     setIcons();
     connectButtonSignalsToSlots();
@@ -23,28 +25,28 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     switch (event->key())
     {
     case Qt::Key_W:
-        ui->plainTextEdit->setPlainText("Gripper going up");
+        handleUserInput("Gripper going up");
         break;
     case Qt::Key_S:
-        ui->plainTextEdit->setPlainText("Gripper going down");
+        handleUserInput("Gripper going down");
         break;
     case Qt::Key_A:
-        ui->plainTextEdit->setPlainText("Gripper going back");
+        handleUserInput("Gripper going back");
         break;
     case Qt::Key_D:
-        ui->plainTextEdit->setPlainText("Gripper going forward");
+        handleUserInput("Gripper going forward");
         break;
     case Qt::Key_I:
-        ui->plainTextEdit->setPlainText("Haller going up");
+        handleUserInput("Haller going up");
         break;
     case Qt::Key_K:
-        ui->plainTextEdit->setPlainText("Haller going down");
+        handleUserInput("Haller going down");
         break;
     case Qt::Key_J:
-        ui->plainTextEdit->setPlainText("Haller going back");
+        handleUserInput("Haller going back");
         break;
     case Qt::Key_L:
-        ui->plainTextEdit->setPlainText("Haller going forward");
+        handleUserInput("Haller going forward");
         break;
     default:
         break;
@@ -82,19 +84,19 @@ void MainWindow::setButtonIcons()
 
 void MainWindow::connectButtonSignalsToSlots()
 {
-    connect(ui->hallerUpButton, &QPushButton::released, this, [this]{handleButtons("Haller going up");});
-    connect(ui->hallerDownButton, &QPushButton::released, this, [this]{handleButtons("Haller going down");});
-    connect(ui->hallerLeftButton, &QPushButton::released, this, [this]{handleButtons("Haller going left");});
-    connect(ui->hallerRightButton, &QPushButton::released, this, [this]{handleButtons("Haller going right");});
+    connect(ui->hallerUpButton, &QPushButton::released, this, [this]{handleUserInput("Haller going up");});
+    connect(ui->hallerDownButton, &QPushButton::released, this, [this]{handleUserInput("Haller going down");});
+    connect(ui->hallerLeftButton, &QPushButton::released, this, [this]{handleUserInput("Haller going left");});
+    connect(ui->hallerRightButton, &QPushButton::released, this, [this]{handleUserInput("Haller going right");});
 
-    connect(ui->gripperUpButton, &QPushButton::released, this, [this]{handleButtons("Gripper going up");});
-    connect(ui->gripperDownButton, &QPushButton::released, this, [this]{handleButtons("Gripper going down");});
-    connect(ui->gripperLeftButton, &QPushButton::released, this, [this]{handleButtons("Gripper going left");});
-    connect(ui->gripperRightButton, &QPushButton::released, this, [this]{handleButtons("Gripper going right");});
+    connect(ui->gripperUpButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going up");});
+    connect(ui->gripperDownButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going down");});
+    connect(ui->gripperLeftButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going left");});
+    connect(ui->gripperRightButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going right");});
 }
 
-void MainWindow::handleButtons(QString textToShow)
+void MainWindow::handleUserInput(QString textToShow)
 {
     ui->plainTextEdit->setPlainText(textToShow);
-    udpNode->sendMessage();
+    udpNode->sendMessage(textToShow);
 }

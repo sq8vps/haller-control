@@ -20,13 +20,13 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 private slots:
-    void handleButtons(QString textToShow);
+    void handleUserInput(QString textToShow);
 private:
     void setIcons();
     void setCameraIcon();
     void setButtonIcons();
     void connectButtonSignalsToSlots();
 
-    UdpNode *udpNode;
+    std::shared_ptr<UdpNode> udpNode;
     Ui::MainWindow *ui;
 };
