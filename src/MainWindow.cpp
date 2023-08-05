@@ -61,7 +61,7 @@ void MainWindow::setIcons()
 
 void MainWindow::setCameraIcon()
 {
-    QPixmap cameraPix(":/resource/img/turtle.jpg");
+    QPixmap cameraPix(":/resource/turtle.jpg");
     int w = ui->image->width();
     int h = ui->image->height();
     ui->image->setPixmap(cameraPix.scaled(w, h));
@@ -69,7 +69,7 @@ void MainWindow::setCameraIcon()
 
 void MainWindow::setButtonIcons()
 {
-    QPixmap buttonPix(":/resource/img/button.png");
+    QPixmap buttonPix(":/resource/button.png");
 
     ui->hallerUpButton->setIcon(QIcon(buttonPix));
     ui->hallerDownButton->setIcon(QIcon(buttonPix));
