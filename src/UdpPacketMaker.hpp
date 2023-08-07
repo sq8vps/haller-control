@@ -1,14 +1,17 @@
 #pragma once
 
 #include "Definitions.hpp"
-#include <array>
 
+#include <QString>
+#include <array>
 
 class UdpPacketMaker
 {
 public:
     UdpPacketMaker();
     ~UdpPacketMaker();
-    static int makePacket(UserInputType inputType, std::array<int, numOfMotors> motorValues);
+    static QByteArray makePacket(UserInputType inputType, std::array<QString, numOfMotors> motorValues = {});
+private:
+    static void appendMotorValuesToPacket(QByteArray& data, std::array<QString, numOfMotors>& motorValues);
 };
 

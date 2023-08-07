@@ -16,6 +16,7 @@ UdpNode::~UdpNode()
 
 void UdpNode::sendMessage(UserInputType inputType, std::array<QString, numOfMotors> motorValues)
 {
-    QByteArray data{};
-    socket->write(data);
+    QByteArray data{UdpPacketMaker::makePacket(inputType, motorValues)};
+    qDebug() << data;
+    //socket->write(data);
 }

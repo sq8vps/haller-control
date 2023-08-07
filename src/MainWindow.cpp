@@ -2,6 +2,7 @@
 #include <QLayout>
 
 #include "MainWindow.hpp"
+#include "Definitions.hpp"
 #include "./ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -43,25 +44,20 @@ void MainWindow::connectButtonSignalsToSlots()
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
-{  
-    if(inputType == UserInputType::MotorControl)
-    {
-        std::array<QString, numOfMotors> motorValues{getMotorValues()};
-        udpNode->sendMessage(inputType, motorValues);
-    }
-    else
-    {
-        udpNode->sendMessage(inputType);
-    }
-}
-
-std::array<QString, numOfMotors> MainWindow::getMotorValues()
 {
     std::array<QString, numOfMotors> motorValues{};
+    if(inputType == UserInputType::MotorControl)
+    {
+        updateMotorValues(motorValues);
+    }
+    udpNode->sendMessage(inputType, motorValues);
+}
+
+void MainWindow::updateMotorValues(std::array<QString, numOfMotors>& motorValues)
+{
     motorValues.at(0) = ui->motor1->text();
     motorValues.at(1) = ui->motor2->text();
     motorValues.at(2) = ui->motor3->text();
     motorValues.at(3) = ui->motor4->text();
     motorValues.at(4) = ui->motor5->text();
-    return motorValues;
 }

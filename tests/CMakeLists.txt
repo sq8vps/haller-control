@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Find the Qt libraries.
 find_package(Qt6Network REQUIRED)
 
-set(This UnitTests)
+set(This tests)
 
 set(Sources
     ExampleTest.cpp

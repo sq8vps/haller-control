@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UdpNode.hpp"
-#include "Definitions.hpp"
 
 #include <QMainWindow>
 #include <QWidget>
@@ -24,7 +23,7 @@ private:
     void setIcons();
     void setCameraIcon();
     void connectButtonSignalsToSlots();
-    std::array<QString, numOfMotors> getMotorValues();
+    void updateMotorValues(std::array<QString, numOfMotors>& motorValues);
 
     std::shared_ptr<UdpNode> udpNode;
     Ui::MainWindow *ui;
