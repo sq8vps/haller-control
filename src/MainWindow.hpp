@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UdpNode.hpp"
+#include "Definitions.hpp"
 
 #include <QMainWindow>
 #include <QWidget>
@@ -17,15 +18,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
 private slots:
-    void handleUserInput(QString textToShow);
+    void handleUserInput(UserInputType inputType);
 private:
     void setIcons();
     void setCameraIcon();
-    void setButtonIcons();
     void connectButtonSignalsToSlots();
+    std::array<QString, numOfMotors> getMotorValues();
 
     std::shared_ptr<UdpNode> udpNode;
     Ui::MainWindow *ui;

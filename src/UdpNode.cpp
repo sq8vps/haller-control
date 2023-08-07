@@ -1,24 +1,21 @@
 #include "UdpNode.hpp"
-
-#include <string>
-
-UdpNode::UdpNode()
-    : destinationAddress("1.2.3.4"), destinationPort(9000)
-{
-    socket = std::make_shared<QUdpSocket>();
-    socket->connectToHost(QHostAddress(destinationAddress), destinationPort);
-}
+#include "UdpPacketMaker.hpp"
 
 UdpNode::UdpNode(QString destinationAddress, uint16_t destinationPort)
     : destinationAddress(destinationAddress), destinationPort(destinationPort)
 {
     socket = std::make_shared<QUdpSocket>();
     socket->bind(QHostAddress(destinationAddress), destinationPort);
+    // TODO check if need to connect
 }
 
-void UdpNode::sendMessage(QString msg)
+UdpNode::~UdpNode()
 {
-    QByteArray data;
-    data.append(msg.toUtf8());
+    socket->close();
+}
+
+void UdpNode::sendMessage(UserInputType inputType, std::array<QString, numOfMotors> motorValues)
+{
+    QByteArray data{};
     socket->write(data);
 }

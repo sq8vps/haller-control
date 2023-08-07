@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/resource">
-        <file>turtle.jpg</file>
-        <file>button.png</file>
+        <file>img/button.png</file>
+        <file>img/turtle.jpg</file>
     </qresource>
 </RCC>

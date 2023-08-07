@@ -19,6 +19,9 @@ set(PROJECT_SOURCES
         MainWindow.ui
         UdpNode.cpp
         UdpNode.hpp
+        Definitions.hpp
+        UdpPacketMaker.cpp
+        UdpPacketMaker.hpp
         resource.qrc
         ${TS_FILES}
 )

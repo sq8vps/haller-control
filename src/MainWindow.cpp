@@ -1,5 +1,6 @@
-#include <string>
+#include <array>
 #include <QLayout>
+
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
 
@@ -20,83 +21,47 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event)
-{
-    switch (event->key())
-    {
-    case Qt::Key_W:
-        handleUserInput("Gripper going up");
-        break;
-    case Qt::Key_S:
-        handleUserInput("Gripper going down");
-        break;
-    case Qt::Key_A:
-        handleUserInput("Gripper going back");
-        break;
-    case Qt::Key_D:
-        handleUserInput("Gripper going forward");
-        break;
-    case Qt::Key_I:
-        handleUserInput("Haller going up");
-        break;
-    case Qt::Key_K:
-        handleUserInput("Haller going down");
-        break;
-    case Qt::Key_J:
-        handleUserInput("Haller going back");
-        break;
-    case Qt::Key_L:
-        handleUserInput("Haller going forward");
-        break;
-    default:
-        break;
-    }
-}
-
 void MainWindow::setIcons()
 {
     setCameraIcon();
-    setButtonIcons();
 }
 
 void MainWindow::setCameraIcon()
 {
-    QPixmap cameraPix(":/resource/turtle.jpg");
+    QPixmap cameraPix(":/resource/img/turtle.jpg");
     int w = ui->image->width();
     int h = ui->image->height();
     ui->image->setPixmap(cameraPix.scaled(w, h));
 }
 
-void MainWindow::setButtonIcons()
-{
-    QPixmap buttonPix(":/resource/button.png");
-
-    ui->hallerUpButton->setIcon(QIcon(buttonPix));
-    ui->hallerDownButton->setIcon(QIcon(buttonPix));
-    ui->hallerLeftButton->setIcon(QIcon(buttonPix));
-    ui->hallerRightButton->setIcon(QIcon(buttonPix));
-
-    ui->gripperUpButton->setIcon(QIcon(buttonPix));
-    ui->gripperDownButton->setIcon(QIcon(buttonPix));
-    ui->gripperLeftButton->setIcon(QIcon(buttonPix));
-    ui->gripperRightButton->setIcon(QIcon(buttonPix));
-}
-
 void MainWindow::connectButtonSignalsToSlots()
 {
-    connect(ui->hallerUpButton, &QPushButton::released, this, [this]{handleUserInput("Haller going up");});
-    connect(ui->hallerDownButton, &QPushButton::released, this, [this]{handleUserInput("Haller going down");});
-    connect(ui->hallerLeftButton, &QPushButton::released, this, [this]{handleUserInput("Haller going left");});
-    connect(ui->hallerRightButton, &QPushButton::released, this, [this]{handleUserInput("Haller going right");});
-
-    connect(ui->gripperUpButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going up");});
-    connect(ui->gripperDownButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going down");});
-    connect(ui->gripperLeftButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going left");});
-    connect(ui->gripperRightButton, &QPushButton::released, this, [this]{handleUserInput("Gripper going right");});
+    connect(ui->sendMotorDataButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::MotorControl);});
+    connect(ui->gripperCloseButton, &QPushButton::toggled, this, [this]{handleUserInput(UserInputType::GripperClose);});
+    connect(ui->gripperOpenButton, &QPushButton::toggled, this, [this]{handleUserInput(UserInputType::GripperOpen);});
+    connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
 }
 
-void MainWindow::handleUserInput(QString textToShow)
+void MainWindow::handleUserInput(UserInputType inputType)
+{  
+    if(inputType == UserInputType::MotorControl)
+    {
+        std::array<QString, numOfMotors> motorValues{getMotorValues()};
+        udpNode->sendMessage(inputType, motorValues);
+    }
+    else
+    {
+        udpNode->sendMessage(inputType);
+    }
+}
+
+std::array<QString, numOfMotors> MainWindow::getMotorValues()
 {
-    ui->plainTextEdit->setPlainText(textToShow);
-    udpNode->sendMessage(textToShow);
+    std::array<QString, numOfMotors> motorValues{};
+    motorValues.at(0) = ui->motor1->text();
+    motorValues.at(1) = ui->motor2->text();
+    motorValues.at(2) = ui->motor3->text();
+    motorValues.at(3) = ui->motor4->text();
+    motorValues.at(4) = ui->motor5->text();
+    return motorValues;
 }

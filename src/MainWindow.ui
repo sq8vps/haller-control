@@ -53,185 +53,202 @@
       <x>0</x>
       <y>390</y>
       <width>801</width>
-      <height>181</height>
+      <height>371</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="gripperLeftButton">
+    <widget class="QRadioButton" name="gripperOpenButton">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>20</y>
+       <width>61</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>open</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="gripperCloseButton">
+     <property name="geometry">
+      <rect>
+       <x>710</x>
+       <y>20</y>
+       <width>71</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>close</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="stopButton">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>70</y>
+       <width>81</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Stop!</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>90</y>
-       <width>64</width>
-       <height>64</height>
+       <y>20</y>
+       <width>81</width>
+       <height>21</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="text">
+      <string>Motor 1</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="hallerUpButton">
+    <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>650</x>
-       <y>30</y>
-       <width>64</width>
-       <height>64</height>
+       <x>20</x>
+       <y>70</y>
+       <width>81</width>
+       <height>21</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="text">
+      <string>Motor 2</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="hallerLeftButton">
+    <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>580</x>
-       <y>90</y>
-       <width>64</width>
-       <height>64</height>
+       <x>290</x>
+       <y>70</y>
+       <width>81</width>
+       <height>21</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="text">
+      <string>Motor 5</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="hallerDownButton">
+    <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>650</x>
-       <y>90</y>
-       <width>64</width>
-       <height>64</height>
+       <x>290</x>
+       <y>20</y>
+       <width>81</width>
+       <height>21</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="text">
+      <string>Motor 4</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="hallerRightButton">
+    <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>720</x>
-       <y>90</y>
-       <width>64</width>
-       <height>64</height>
+       <x>20</x>
+       <y>120</y>
+       <width>81</width>
+       <height>21</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="text">
+      <string>Motor 3</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="gripperRightButton">
+    <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>90</y>
-       <width>64</width>
-       <height>64</height>
+       <x>560</x>
+       <y>20</y>
+       <width>81</width>
+       <height>21</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="text">
+      <string>Gripper</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="gripperDownButton">
+    <widget class="QLineEdit" name="motor5">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>90</y>
-       <width>64</width>
-       <height>64</height>
+       <x>370</x>
+       <y>60</y>
+       <width>151</width>
+       <height>31</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="maxLength">
+      <number>10</number>
      </property>
     </widget>
-    <widget class="QPushButton" name="gripperUpButton">
+    <widget class="QLineEdit" name="motor4">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>30</y>
-       <width>64</width>
-       <height>64</height>
+       <x>370</x>
+       <y>20</y>
+       <width>151</width>
+       <height>31</height>
       </rect>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="maxLength">
+      <number>10</number>
      </property>
     </widget>
-    <widget class="QLabel" name="gripperLabel">
+    <widget class="QLineEdit" name="motor3">
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>10</y>
-       <width>141</width>
-       <height>21</height>
+       <y>120</y>
+       <width>151</width>
+       <height>31</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Gipper</string>
+     <property name="maxLength">
+      <number>10</number>
      </property>
     </widget>
-    <widget class="QLabel" name="hallerLabel">
+    <widget class="QLineEdit" name="motor2">
      <property name="geometry">
       <rect>
-       <x>650</x>
-       <y>10</y>
-       <width>141</width>
-       <height>21</height>
+       <x>100</x>
+       <y>70</y>
+       <width>151</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="maxLength">
+      <number>10</number>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="motor1">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>20</y>
+       <width>151</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="maxLength">
+      <number>10</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="sendMotorDataButton">
+     <property name="geometry">
+      <rect>
+       <x>369</x>
+       <y>100</y>
+       <width>151</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>Haller</string>
+      <string>Send motor data</string>
      </property>
     </widget>
    </widget>
