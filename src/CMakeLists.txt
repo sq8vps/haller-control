@@ -8,8 +8,9 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt6Network REQUIRED)
 find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Gui)
 
-set(This src)
+set(This heller-control)
 
 set(Sources
     main.cpp
@@ -27,8 +28,8 @@ set(Sources
 set(QtLibraries
         Qt${QT_VERSION_MAJOR}::Network
         Qt${QT_VERSION_MAJOR}::Core
-        Qt${QT_VERSION_MAJOR}::Widgets)
-
+        Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Gui)
 
 add_executable(${This} ${Sources})
 

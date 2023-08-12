@@ -24,6 +24,7 @@ private:
     void setCameraIcon();
     void connectButtonSignalsToSlots();
     void updateMotorValues(std::array<float, numOfMotors>& motorValues);
+    void setValidators();
 
     std::shared_ptr<UdpNode> udpNode;
     Ui::MainWindow *ui;

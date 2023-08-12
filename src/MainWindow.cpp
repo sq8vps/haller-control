@@ -1,5 +1,6 @@
 #include <array>
 #include <QLayout>
+#include <QRegularExpressionValidator>
 
 #include "MainWindow.hpp"
 #include "Definitions.hpp"
@@ -12,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
 
+    // TODO logging system
     setWindowTitle(tr("Haller control panel"));
+    setValidators();
     setIcons();
     connectButtonSignalsToSlots();
 }
@@ -61,4 +64,17 @@ void MainWindow::updateMotorValues(std::array<float, numOfMotors>& motorValues)
     motorValues.at(2) = ui->motor3->text().toFloat();
     motorValues.at(3) = ui->motor4->text().toFloat();
     motorValues.at(4) = ui->motor5->text().toFloat();
+}
+
+void MainWindow::setValidators()
+{
+    // numbers from -1 to 1 inclusive with max 6 digits after decimal
+    QRegularExpression rx("-1|0|1|^-?0.[0-9]{1,6}$");
+    QValidator *validator = new QRegularExpressionValidator(rx, this);
+
+    ui->motor1->setValidator(validator);
+    ui->motor2->setValidator(validator);
+    ui->motor3->setValidator(validator);
+    ui->motor4->setValidator(validator);
+    ui->motor5->setValidator(validator);
 }

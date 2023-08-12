@@ -6,7 +6,6 @@ UdpNode::UdpNode(QString destinationAddress, uint16_t destinationPort)
 {
     socket = std::make_shared<QUdpSocket>();
     socket->connectToHost(QHostAddress(destinationAddress), destinationPort);
-    // TODO check if need to connect
 }
 
 UdpNode::~UdpNode()

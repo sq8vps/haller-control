@@ -20,11 +20,13 @@ QByteArray UdpPacketMaker::makePacket(UserInputType inputType, std::array<float,
     case UserInputType::GripperClose:
         data.append(static_cast<char>(PacketType::ServoControl));
         data.append(static_cast<char>(DataLength::ServoControl));
+        data.append(static_cast<char>(ServoNumber::GripperClose));
         data.append(reinterpret_cast<const char*>(&gripperClose), sizeof(gripperClose));
         break;
     case UserInputType::GripperOpen:
         data.append(static_cast<char>(PacketType::ServoControl));
         data.append(static_cast<char>(DataLength::ServoControl));
+        data.append(static_cast<char>(ServoNumber::GripperOpen));
         data.append(reinterpret_cast<const char*>(&gripperOpen), sizeof(gripperOpen));
         break;
     case UserInputType::EmergencyStop:

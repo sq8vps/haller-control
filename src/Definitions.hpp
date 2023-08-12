@@ -21,6 +21,12 @@ enum class DataLength : uint8_t
     ServoControl = 5
 };
 
+enum class ServoNumber : uint8_t
+{
+    GripperOpen,
+    GripperClose,
+};
+
 enum class UserInputType : uint8_t
 {
     MotorControl,
