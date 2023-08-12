@@ -5,7 +5,7 @@ UdpNode::UdpNode(QString destinationAddress, uint16_t destinationPort)
     : destinationAddress(destinationAddress), destinationPort(destinationPort)
 {
     socket = std::make_shared<QUdpSocket>();
-    socket->bind(QHostAddress(destinationAddress), destinationPort);
+    socket->connectToHost(QHostAddress(destinationAddress), destinationPort);
     // TODO check if need to connect
 }
 
@@ -14,9 +14,9 @@ UdpNode::~UdpNode()
     socket->close();
 }
 
-void UdpNode::sendMessage(UserInputType inputType, std::array<QString, numOfMotors> motorValues)
+void UdpNode::sendMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues)
 {
     QByteArray data{UdpPacketMaker::makePacket(inputType, motorValues)};
     qDebug() << data;
-    //socket->write(data);
+    socket->write(data);
 }

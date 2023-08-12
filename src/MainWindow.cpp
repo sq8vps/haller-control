@@ -27,7 +27,6 @@ void MainWindow::setIcons()
     setCameraIcon();
 }
 
-// TODO make two cameras
 void MainWindow::setCameraIcon()
 {
     QPixmap cameraPix(":/resource/img/turtle.jpg");
@@ -40,7 +39,6 @@ void MainWindow::setCameraIcon()
 void MainWindow::connectButtonSignalsToSlots()
 {
     connect(ui->sendMotorDataButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::MotorControl);});
-    // TODO fix button close/open
     connect(ui->gripperCloseButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperClose);});
     connect(ui->gripperOpenButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperOpen);});
     connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
@@ -48,7 +46,7 @@ void MainWindow::connectButtonSignalsToSlots()
 
 void MainWindow::handleUserInput(UserInputType inputType)
 {
-    std::array<QString, numOfMotors> motorValues{};
+    std::array<float, numOfMotors> motorValues{};
     if(inputType == UserInputType::MotorControl)
     {
         updateMotorValues(motorValues);
@@ -56,11 +54,11 @@ void MainWindow::handleUserInput(UserInputType inputType)
     udpNode->sendMessage(inputType, motorValues);
 }
 
-void MainWindow::updateMotorValues(std::array<QString, numOfMotors>& motorValues)
+void MainWindow::updateMotorValues(std::array<float, numOfMotors>& motorValues)
 {
-    motorValues.at(0) = ui->motor1->text();
-    motorValues.at(1) = ui->motor2->text();
-    motorValues.at(2) = ui->motor3->text();
-    motorValues.at(3) = ui->motor4->text();
-    motorValues.at(4) = ui->motor5->text();
+    motorValues.at(0) = ui->motor1->text().toFloat();
+    motorValues.at(1) = ui->motor2->text().toFloat();
+    motorValues.at(2) = ui->motor3->text().toFloat();
+    motorValues.at(3) = ui->motor4->text().toFloat();
+    motorValues.at(4) = ui->motor5->text().toFloat();
 }

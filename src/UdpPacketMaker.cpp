@@ -1,14 +1,14 @@
 #include "UdpPacketMaker.hpp"
 
 #include <QByteArray>
+#include <Qdebug>
 
 UdpPacketMaker::UdpPacketMaker() {}
 
 UdpPacketMaker::~UdpPacketMaker() {}
 
-QByteArray UdpPacketMaker::makePacket(UserInputType inputType, std::array<QString, numOfMotors> motorValues)
+QByteArray UdpPacketMaker::makePacket(UserInputType inputType, std::array<float, numOfMotors> motorValues)
 {
-    // TODO change data type
     QByteArray data{};
 
     switch (inputType) {
@@ -20,12 +20,12 @@ QByteArray UdpPacketMaker::makePacket(UserInputType inputType, std::array<QStrin
     case UserInputType::GripperClose:
         data.append(static_cast<char>(PacketType::ServoControl));
         data.append(static_cast<char>(DataLength::ServoControl));
-        data.append(static_cast<char>(gripperClose));
+        data.append(reinterpret_cast<const char*>(&gripperClose), sizeof(gripperClose));
         break;
     case UserInputType::GripperOpen:
         data.append(static_cast<char>(PacketType::ServoControl));
         data.append(static_cast<char>(DataLength::ServoControl));
-        data.append(static_cast<char>(gripperOpen));
+        data.append(reinterpret_cast<const char*>(&gripperOpen), sizeof(gripperOpen));
         break;
     case UserInputType::EmergencyStop:
         data.append(static_cast<char>(PacketType::EmergencyStop));
@@ -38,10 +38,10 @@ QByteArray UdpPacketMaker::makePacket(UserInputType inputType, std::array<QStrin
     return data;
 }
 
-void UdpPacketMaker::appendMotorValuesToPacket(QByteArray& data, std::array<QString, numOfMotors>& motorValues)
+void UdpPacketMaker::appendMotorValuesToPacket(QByteArray& data, std::array<float, numOfMotors>& motorValues)
 {
     for(const auto& value : motorValues)
     {
-        data.append(value.toUtf8());
+        data.append(reinterpret_cast<const char*>(&value), sizeof(value));
     }
 }

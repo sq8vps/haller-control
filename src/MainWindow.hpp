@@ -23,7 +23,7 @@ private:
     void setIcons();
     void setCameraIcon();
     void connectButtonSignalsToSlots();
-    void updateMotorValues(std::array<QString, numOfMotors>& motorValues);
+    void updateMotorValues(std::array<float, numOfMotors>& motorValues);
 
     std::shared_ptr<UdpNode> udpNode;
     Ui::MainWindow *ui;
