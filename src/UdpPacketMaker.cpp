@@ -8,6 +8,7 @@ UdpPacketMaker::~UdpPacketMaker() {}
 
 QByteArray UdpPacketMaker::makePacket(UserInputType inputType, std::array<QString, numOfMotors> motorValues)
 {
+    // TODO change data type
     QByteArray data{};
 
     switch (inputType) {

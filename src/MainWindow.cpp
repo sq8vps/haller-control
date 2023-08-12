@@ -27,19 +27,22 @@ void MainWindow::setIcons()
     setCameraIcon();
 }
 
+// TODO make two cameras
 void MainWindow::setCameraIcon()
 {
     QPixmap cameraPix(":/resource/img/turtle.jpg");
-    int w = ui->image->width();
-    int h = ui->image->height();
-    ui->image->setPixmap(cameraPix.scaled(w, h));
+    int w = ui->leftCamera->width();
+    int h = ui->leftCamera->height();
+    ui->leftCamera->setPixmap(cameraPix.scaled(w, h));
+    ui->rightCamera->setPixmap(cameraPix.scaled(w, h));
 }
 
 void MainWindow::connectButtonSignalsToSlots()
 {
     connect(ui->sendMotorDataButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::MotorControl);});
-    connect(ui->gripperCloseButton, &QPushButton::toggled, this, [this]{handleUserInput(UserInputType::GripperClose);});
-    connect(ui->gripperOpenButton, &QPushButton::toggled, this, [this]{handleUserInput(UserInputType::GripperOpen);});
+    // TODO fix button close/open
+    connect(ui->gripperCloseButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperClose);});
+    connect(ui->gripperOpenButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperOpen);});
     connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
 }
 
