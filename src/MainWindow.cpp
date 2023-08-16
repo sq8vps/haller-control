@@ -1,9 +1,10 @@
 #include <array>
+#include <vector>
 #include <QLayout>
 #include <QRegularExpressionValidator>
+#include <QValidator>
 
 #include "MainWindow.hpp"
-#include "Definitions.hpp"
 #include "./ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -15,9 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // TODO logging system
     setWindowTitle(tr("Haller control panel"));
+    initMotorButtons();
+    connectButtonSignalsToSlots();
     setValidators();
     setIcons();
-    connectButtonSignalsToSlots();
 }
 
 MainWindow::~MainWindow()
@@ -27,10 +29,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::setIcons()
 {
-    setCameraIcon();
+    setCameraIcons();
 }
 
-void MainWindow::setCameraIcon()
+void MainWindow::setCameraIcons()
 {
     QPixmap cameraPix(":/resource/img/turtle.jpg");
     int w = ui->leftCamera->width();
@@ -52,29 +54,44 @@ void MainWindow::handleUserInput(UserInputType inputType)
     std::array<float, numOfMotors> motorValues{};
     if(inputType == UserInputType::MotorControl)
     {
-        updateMotorValues(motorValues);
+        updateMotorValuesToSend(motorValues);
+        clearMotorTextFields();
     }
     udpNode->sendMessage(inputType, motorValues);
 }
 
-void MainWindow::updateMotorValues(std::array<float, numOfMotors>& motorValues)
+void MainWindow::updateMotorValuesToSend(std::array<float, numOfMotors>& motorValues)
 {
-    motorValues.at(0) = ui->motor1->text().toFloat();
-    motorValues.at(1) = ui->motor2->text().toFloat();
-    motorValues.at(2) = ui->motor3->text().toFloat();
-    motorValues.at(3) = ui->motor4->text().toFloat();
-    motorValues.at(4) = ui->motor5->text().toFloat();
+    for(int i = 0; i < numOfMotors; ++i)
+    {
+        motorValues.at(i) = motorTextFields.at(i)->text().toFloat();
+    }
+}
+
+void MainWindow::clearMotorTextFields()
+{
+    for(const auto & field : motorTextFields)
+    {
+        field->clear();
+    }
 }
 
 void MainWindow::setValidators()
 {
     // numbers from -1 to 1 inclusive with max 6 digits after decimal
     QRegularExpression rx("-1|0|1|^-?0.[0-9]{1,6}$");
-    QValidator *validator = new QRegularExpressionValidator(rx, this);
+    QRegularExpressionValidator *validator = new QRegularExpressionValidator(rx, this);
+    for(const auto& field : motorTextFields)
+    {
+        field->setValidator(validator);
+    }
+}
 
-    ui->motor1->setValidator(validator);
-    ui->motor2->setValidator(validator);
-    ui->motor3->setValidator(validator);
-    ui->motor4->setValidator(validator);
-    ui->motor5->setValidator(validator);
+void MainWindow::initMotorButtons()
+{
+    motorTextFields.push_back(ui->motor1);
+    motorTextFields.push_back(ui->motor2);
+    motorTextFields.push_back(ui->motor3);
+    motorTextFields.push_back(ui->motor4);
+    motorTextFields.push_back(ui->motor5);
 }
