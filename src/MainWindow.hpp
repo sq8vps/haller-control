@@ -1,11 +1,14 @@
 #pragma once
 
 #include "UdpNode.hpp"
+#include "Definitions.hpp"
 
 #include <QMainWindow>
 #include <QWidget>
-#include <QTextEdit>
+#include <QLineEdit>
 #include <QKeyEvent>
+
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,16 +20,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
 private slots:
-    void handleUserInput(QString textToShow);
+    void handleUserInput(UserInputType inputType);
 private:
     void setIcons();
-    void setCameraIcon();
-    void setButtonIcons();
+    void setCameraIcons();
     void connectButtonSignalsToSlots();
+    void updateMotorValuesToSend(std::array<float, numOfMotors>& motorValues);
+    void setValidators();
+    void initMotorButtons();
+    void clearMotorTextFields();
 
+    std::vector<QLineEdit *> motorTextFields;
     std::shared_ptr<UdpNode> udpNode;
     Ui::MainWindow *ui;
 };
