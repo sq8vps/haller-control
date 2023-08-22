@@ -1,7 +1,6 @@
 #include <array>
 #include <vector>
 #include <QLayout>
-#include <QRegularExpressionValidator>
 #include <QValidator>
 
 #include "MainWindow.hpp"
@@ -24,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete validator;
     delete ui;
 }
 
@@ -80,7 +80,7 @@ void MainWindow::setValidators()
 {
     // numbers from -1 to 1 inclusive with max 6 digits after decimal
     QRegularExpression rx("-1|0|1|^-?0.[0-9]{1,6}$");
-    QRegularExpressionValidator *validator = new QRegularExpressionValidator(rx, this);
+    validator = new QRegularExpressionValidator(rx, this);
     for(const auto& field : motorTextFields)
     {
         field->setValidator(validator);

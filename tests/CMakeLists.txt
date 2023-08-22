@@ -6,9 +6,10 @@ find_package(Qt6Network REQUIRED)
 set(This tests)
 
 set(Sources
-    ExampleTest.cpp
-    ../src/UdpNode.cpp
-    ../src/UdpNode.hpp
+    UtUdpPacketMaker.cpp
+    ../src/UdpPacketMaker.cpp
+    ../src/UdpPacketMaker.hpp
+    ../src/Definitions.hpp
 )
 
 set(QtLibraries

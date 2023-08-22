@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QKeyEvent>
+#include <QRegularExpressionValidator>
 
 #include <vector>
 
@@ -33,5 +34,6 @@ private:
 
     std::vector<QLineEdit *> motorTextFields;
     std::shared_ptr<UdpNode> udpNode;
+    QRegularExpressionValidator *validator;
     Ui::MainWindow *ui;
 };
