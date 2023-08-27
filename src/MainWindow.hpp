@@ -36,4 +36,5 @@ private:
     std::shared_ptr<UdpNode> udpNode;
     QRegularExpressionValidator *validator;
     Ui::MainWindow *ui;
+    QTabWidget *tabWidget;
 };
