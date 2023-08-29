@@ -12,8 +12,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
-
-    // TODO logging system
+    logger = Logger::getLogger();
+    QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
+    logger->log();
     setWindowTitle(tr("Haller control panel"));
     initMotorButtons();
     connectButtonSignalsToSlots();
@@ -30,6 +31,11 @@ MainWindow::~MainWindow()
 void MainWindow::setIcons()
 {
     setCameraIcons();
+}
+
+void MainWindow::setLogText()
+{
+    ui->plainTextEdit->insertPlainText("dupa\n");
 }
 
 void MainWindow::setCameraIcons()

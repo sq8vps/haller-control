@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UdpNode.hpp"
+#include "Logger.hpp"
 #include "Definitions.hpp"
 
 #include <QMainWindow>
@@ -23,6 +24,7 @@ public:
     ~MainWindow();
 private slots:
     void handleUserInput(UserInputType inputType);
+    void setLogText();
 private:
     void setIcons();
     void setCameraIcons();
@@ -35,6 +37,7 @@ private:
     std::vector<QLineEdit *> motorTextFields;
     std::shared_ptr<UdpNode> udpNode;
     QRegularExpressionValidator *validator;
+    Logger *logger;
     Ui::MainWindow *ui;
     QTabWidget *tabWidget;
 };

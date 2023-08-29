@@ -10,19 +10,24 @@ find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Gui)
 
-set(This heller-control)
+set(This haller-control)
 
 set(Sources
     main.cpp
     MainWindow.cpp
-    MainWindow.hpp
     MainWindow.ui
     UdpNode.cpp
+    UdpPacketMaker.cpp
+    Logger.cpp
+    resource.qrc
+)
+
+set(Headers
+    MainWindow.hpp
     UdpNode.hpp
     Definitions.hpp
-    UdpPacketMaker.cpp
     UdpPacketMaker.hpp
-    resource.qrc
+    Logger.hpp
 )
 
 set(QtLibraries
@@ -31,7 +36,7 @@ set(QtLibraries
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Gui)
 
-add_executable(${This} ${Sources})
+add_executable(${This} ${Sources} ${Headers})
 
 target_link_libraries(${This} PUBLIC
     ${QtLibraries}

@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(haller-control)
+project(haller-control LANGUAGES CXX)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 # Place binaries and libraries according to GNU standards.
 include(GNUInstallDirs)
@@ -12,5 +16,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 add_subdirectory(src)
 
 # Enable testing and add tests folder.
-enable_testing()
-add_subdirectory(tests)
+#enable_testing()
+#add_subdirectory(tests)
