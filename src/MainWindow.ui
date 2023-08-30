@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideRight</enum>
@@ -286,7 +286,7 @@
      <attribute name="title">
       <string>Logs</string>
      </attribute>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="saveLogsButton">
       <property name="geometry">
        <rect>
         <x>0</x>

@@ -18,15 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(tr("Haller control panel"));
     initMotorButtons();
     connecSignalsToSlots();
-    logger->log("Jakies info 1\n", LogType::Inf);
-    logger->log("Jakies info 2\n", LogType::Inf);
-    logger->log("Jakies info 3\n", LogType::Inf);
-    logger->log("Dupsko\n", LogType::Warning);
-    logger->log("Dupsko znowu\n", LogType::Error);
-    logger->log("A teraz info\n", LogType::Inf);
-
     setValidators();
     setIcons();
+    logger->log("Haller is up and running", LogType::Inf);
 }
 
 MainWindow::~MainWindow()
@@ -63,7 +57,6 @@ void MainWindow::setLogText(QString textToLog, LogType logType)
             ui->logTextField->setTextColor("white");
             break;
     }
-
     ui->logTextField->insertPlainText(textToLog);
 }
 
