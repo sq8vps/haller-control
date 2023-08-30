@@ -24,11 +24,11 @@ public:
     ~MainWindow();
 private slots:
     void handleUserInput(UserInputType inputType);
-    void setLogText();
+    void setLogText(QString textToLog, LogType logType);
 private:
     void setIcons();
     void setCameraIcons();
-    void connectButtonSignalsToSlots();
+    void connecSignalsToSlots();
     void updateMotorValuesToSend(std::array<float, numOfMotors>& motorValues);
     void setValidators();
     void initMotorButtons();

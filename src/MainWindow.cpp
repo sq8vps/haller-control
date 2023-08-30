@@ -2,6 +2,7 @@
 #include <vector>
 #include <QLayout>
 #include <QValidator>
+#include <QColor>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
@@ -13,11 +14,17 @@ MainWindow::MainWindow(QWidget *parent)
     udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
     logger = Logger::getLogger();
-    QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
-    logger->log();
+
     setWindowTitle(tr("Haller control panel"));
     initMotorButtons();
-    connectButtonSignalsToSlots();
+    connecSignalsToSlots();
+    logger->log("Jakies info 1\n", LogType::Inf);
+    logger->log("Jakies info 2\n", LogType::Inf);
+    logger->log("Jakies info 3\n", LogType::Inf);
+    logger->log("Dupsko\n", LogType::Warning);
+    logger->log("Dupsko znowu\n", LogType::Error);
+    logger->log("A teraz info\n", LogType::Inf);
+
     setValidators();
     setIcons();
 }
@@ -33,11 +40,6 @@ void MainWindow::setIcons()
     setCameraIcons();
 }
 
-void MainWindow::setLogText()
-{
-    ui->plainTextEdit->insertPlainText("dupa\n");
-}
-
 void MainWindow::setCameraIcons()
 {
     QPixmap cameraPix(":/resource/img/turtle.jpg");
@@ -47,12 +49,32 @@ void MainWindow::setCameraIcons()
     ui->rightCamera->setPixmap(cameraPix.scaled(w, h));
 }
 
-void MainWindow::connectButtonSignalsToSlots()
+void MainWindow::setLogText(QString textToLog, LogType logType)
+{
+    switch(logType)
+    {
+        case LogType::Warning:
+            ui->logTextField->setTextColor("yellow");
+            break;
+        case LogType::Error:
+            ui->logTextField->setTextColor("red");
+            break;
+        default:
+            ui->logTextField->setTextColor("white");
+            break;
+    }
+
+    ui->logTextField->insertPlainText(textToLog);
+}
+
+void MainWindow::connecSignalsToSlots()
 {
     connect(ui->sendMotorDataButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::MotorControl);});
     connect(ui->gripperCloseButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperClose);});
     connect(ui->gripperOpenButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperOpen);});
     connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
+
+    QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
