@@ -14,7 +14,7 @@ public:
     ~UdpNode();
     void sendMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues = {});
 private:
-    void prepareLogMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues);
+    QString prepareLogMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues);
 
     std::shared_ptr<QUdpSocket> socket;
     Logger *logger = Logger::getLogger();

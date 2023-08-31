@@ -79,7 +79,7 @@ void MainWindow::saveLogsToFile()
 {
     QString logs{ui->logTextField->toPlainText()};
 
-    // this way file is saved to build directory, you can choose another path
+    // this way file is saved to build directory but you can choose another path
     QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
     QFile file(filename);
 
@@ -95,9 +95,9 @@ std::string MainWindow::getCurrentDateAndTime()
     auto now = std::chrono::system_clock::now();
     auto nowTime = std::chrono::system_clock::to_time_t(now);
 
-    std::stringstream ss;
-    ss << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
-    return ss.str();
+    std::stringstream stream;
+    stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
+    return stream.str();
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
