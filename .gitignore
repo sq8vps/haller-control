@@ -1,3 +1,6 @@
+#Saved logs
+logs/*
+
 # Prerequisites
 *.d
 

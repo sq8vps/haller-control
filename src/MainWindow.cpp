@@ -1,8 +1,12 @@
 #include <array>
 #include <vector>
+#include <chrono>
+#include <sstream>
+
 #include <QLayout>
 #include <QValidator>
 #include <QColor>
+#include <QFile>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
@@ -67,7 +71,33 @@ void MainWindow::connecSignalsToSlots()
     connect(ui->gripperOpenButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperOpen);});
     connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
 
+    connect(ui->saveLogsButton, &QPushButton::released, this, &MainWindow::saveLogsToFile);
     QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
+}
+
+void MainWindow::saveLogsToFile()
+{
+    QString logs{ui->logTextField->toPlainText()};
+
+    // this way file is saved to build directory, you can choose another path
+    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
+    QFile file(filename);
+
+    if(file.open(QIODevice::WriteOnly))
+    {
+        QTextStream stream(&file);
+        stream << logs;
+    }
+}
+
+std::string MainWindow::getCurrentDateAndTime()
+{
+    auto now = std::chrono::system_clock::now();
+    auto nowTime = std::chrono::system_clock::to_time_t(now);
+
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
+    return ss.str();
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
