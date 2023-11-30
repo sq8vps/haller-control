@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Definitions.hpp"
+#include "Logger.hpp"
 
 #include <cstdint>
 #include <array>
@@ -13,7 +14,10 @@ public:
     ~UdpNode();
     void sendMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues = {});
 private:
+    void prepareLogMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues);
+
     std::shared_ptr<QUdpSocket> socket;
+    Logger *logger = Logger::getLogger();
     uint16_t destinationPort;
     QString destinationAddress;
 };

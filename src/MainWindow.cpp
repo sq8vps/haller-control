@@ -1,8 +1,12 @@
 #include <array>
 #include <vector>
+#include <chrono>
+#include <sstream>
+
 #include <QLayout>
-#include <QRegularExpressionValidator>
 #include <QValidator>
+#include <QColor>
+#include <QFile>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
@@ -13,17 +17,19 @@ MainWindow::MainWindow(QWidget *parent)
 {
     udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
+    logger = Logger::getLogger();
 
-    // TODO logging system
     setWindowTitle(tr("Haller control panel"));
     initMotorButtons();
-    connectButtonSignalsToSlots();
+    connecSignalsToSlots();
     setValidators();
     setIcons();
+    logger->log("Haller is up and running", LogType::Inf);
 }
 
 MainWindow::~MainWindow()
 {
+    delete validator;
     delete ui;
 }
 
@@ -41,12 +47,57 @@ void MainWindow::setCameraIcons()
     ui->rightCamera->setPixmap(cameraPix.scaled(w, h));
 }
 
-void MainWindow::connectButtonSignalsToSlots()
+void MainWindow::setLogText(QString textToLog, LogType logType)
+{
+    switch(logType)
+    {
+        case LogType::Warning:
+            ui->logTextField->setTextColor("yellow");
+            break;
+        case LogType::Error:
+            ui->logTextField->setTextColor("red");
+            break;
+        default:
+            ui->logTextField->setTextColor("white");
+            break;
+    }
+    ui->logTextField->insertPlainText(textToLog);
+}
+
+void MainWindow::connecSignalsToSlots()
 {
     connect(ui->sendMotorDataButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::MotorControl);});
     connect(ui->gripperCloseButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperClose);});
     connect(ui->gripperOpenButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperOpen);});
     connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
+
+    connect(ui->saveLogsButton, &QPushButton::released, this, &MainWindow::saveLogsToFile);
+    QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
+}
+
+void MainWindow::saveLogsToFile()
+{
+    QString logs{ui->logTextField->toPlainText()};
+
+    // this way file is saved to build directory, you can choose another path
+    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
+    QFile file(filename);
+
+    if(file.open(QIODevice::WriteOnly))
+    {
+        QTextStream stream(&file);
+        stream << logs;
+    }
+}
+
+std::string MainWindow::getCurrentDateAndTime()
+{
+    auto now = std::chrono::system_clock::now();
+    auto nowTime = std::chrono::system_clock::to_time_t(now);
+
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
+    return ss.str();
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
@@ -80,7 +131,7 @@ void MainWindow::setValidators()
 {
     // numbers from -1 to 1 inclusive with max 6 digits after decimal
     QRegularExpression rx("-1|0|1|^-?0.[0-9]{1,6}$");
-    QRegularExpressionValidator *validator = new QRegularExpressionValidator(rx, this);
+    validator = new QRegularExpressionValidator(rx, this);
     for(const auto& field : motorTextFields)
     {
         field->setValidator(validator);

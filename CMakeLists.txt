@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(haller-control)
+project(haller-control LANGUAGES CXX)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 # Place binaries and libraries according to GNU standards.
 include(GNUInstallDirs)

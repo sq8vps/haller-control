@@ -34,3 +34,11 @@ enum class UserInputType : uint8_t
     GripperClose,
     EmergencyStop
 };
+
+enum class LogType : uint8_t
+{
+    Debug,
+    Inf,
+    Warning,
+    Error
+};
