@@ -79,8 +79,10 @@ void MainWindow::saveLogsToFile()
 {
     QString logs{ui->logTextField->toPlainText()};
 
-    // this way file is saved to build directory but you can choose another path
+    // log file is saved in build directory
     QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
+    // files in windows should not contain ":"
+    filename.replace(":", "-");
     QFile file(filename);
 
     if(file.open(QIODevice::WriteOnly))
