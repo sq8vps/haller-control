@@ -34,7 +34,6 @@ private:
     void setValidators();
     void initMotorButtons();
     void clearMotorTextFields();
-    std::string getCurrentDateAndTime();
 
     std::vector<QLineEdit *> motorTextFields;
     std::shared_ptr<UdpNode> udpNode;

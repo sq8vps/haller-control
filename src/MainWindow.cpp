@@ -1,12 +1,9 @@
 #include <array>
 #include <vector>
-#include <chrono>
-#include <sstream>
 
 #include <QLayout>
 #include <QValidator>
 #include <QColor>
-#include <QFile>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
@@ -78,28 +75,7 @@ void MainWindow::connecSignalsToSlots()
 void MainWindow::saveLogsToFile()
 {
     QString logs{ui->logTextField->toPlainText()};
-
-    // log file is saved in build directory
-    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
-    // files in windows should not contain ":"
-    filename.replace(":", "-");
-    QFile file(filename);
-
-    if(file.open(QIODevice::WriteOnly))
-    {
-        QTextStream stream(&file);
-        stream << logs;
-    }
-}
-
-std::string MainWindow::getCurrentDateAndTime()
-{
-    auto now = std::chrono::system_clock::now();
-    auto nowTime = std::chrono::system_clock::to_time_t(now);
-
-    std::stringstream stream;
-    stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
-    return stream.str();
+    logger->saveLogs(logs);
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
