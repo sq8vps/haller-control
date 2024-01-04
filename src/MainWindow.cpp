@@ -4,6 +4,7 @@
 #include <QLayout>
 #include <QValidator>
 #include <QColor>
+#include <QMessageBox>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
@@ -16,12 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     logger = Logger::getLogger();
 
-    setWindowTitle(tr("Haller control panel"));
+    setWindowTitle(tr("Narwhal control panel"));
     initMotorButtons();
     connecSignalsToSlots();
     setValidators();
     setIcons();
-    logger->log("Haller is up and running", LogType::Inf);
 }
 
 MainWindow::~MainWindow()
@@ -76,6 +76,8 @@ void MainWindow::saveLogsToFile()
 {
     QString logs{ui->logTextField->toPlainText()};
     logger->saveLogs(logs);
+    ui->logTextField->clear();
+    QMessageBox::information(this, tr("Log info"), tr("Logs saved") );
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
