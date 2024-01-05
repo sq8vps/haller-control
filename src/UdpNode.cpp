@@ -19,10 +19,10 @@ void UdpNode::sendMessage(UserInputType inputType, std::array<float, numOfMotors
 {
     QByteArray data{UdpPacketMaker::makePacket(inputType, motorValues)};
     socket->write(data);
-    prepareLogMessage(inputType, motorValues);
+    logger->log(prepareLogMessage(inputType, motorValues), LogType::Inf);
 }
 
-void UdpNode::prepareLogMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues)
+QString UdpNode::prepareLogMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues)
 {
     // TODO make it less ugly
     QString logMsg = "UDP packet was sent. Packet type: ";
@@ -48,14 +48,18 @@ void UdpNode::prepareLogMessage(UserInputType inputType, std::array<float, numOf
         logMsg += "motor control (id: " + QString::number((uint8_t)PacketType::MotorControl) + "), "
                 + "packet length: " + QString::number(uint8_t(DataLength::MotorControl))
                 + ", packet data: [";
-        for(const auto &value : motorValues)
+        for(int i=0; i<numOfMotors; ++i)
         {
-            logMsg += QString::number(value) + ", ";
+            logMsg += QString::number(motorValues[i]);
+            if(i!=numOfMotors-1)
+            {
+                logMsg += ", ";
+            }
         }
         logMsg += "]";
         break;
     default:
         break;
     }
-    logger->log(logMsg, LogType::Inf);
+    return logMsg;
 }

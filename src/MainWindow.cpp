@@ -1,12 +1,10 @@
 #include <array>
 #include <vector>
-#include <chrono>
-#include <sstream>
 
 #include <QLayout>
 #include <QValidator>
 #include <QColor>
-#include <QFile>
+#include <QMessageBox>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
@@ -19,12 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     logger = Logger::getLogger();
 
-    setWindowTitle(tr("Haller control panel"));
+    setWindowTitle(tr("Narwhal control panel"));
     initMotorButtons();
     connecSignalsToSlots();
     setValidators();
     setIcons();
-    logger->log("Haller is up and running", LogType::Inf);
 }
 
 MainWindow::~MainWindow()
@@ -78,26 +75,9 @@ void MainWindow::connecSignalsToSlots()
 void MainWindow::saveLogsToFile()
 {
     QString logs{ui->logTextField->toPlainText()};
-
-    // this way file is saved to build directory, you can choose another path
-    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
-    QFile file(filename);
-
-    if(file.open(QIODevice::WriteOnly))
-    {
-        QTextStream stream(&file);
-        stream << logs;
-    }
-}
-
-std::string MainWindow::getCurrentDateAndTime()
-{
-    auto now = std::chrono::system_clock::now();
-    auto nowTime = std::chrono::system_clock::to_time_t(now);
-
-    std::stringstream ss;
-    ss << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
-    return ss.str();
+    logger->saveLogs(logs);
+    ui->logTextField->clear();
+    QMessageBox::information(this, tr("Log info"), tr("Logs saved") );
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)
