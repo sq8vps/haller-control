@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QLocale>
+#include <cstdint>
 
 int main(int argc, char *argv[])
 {
