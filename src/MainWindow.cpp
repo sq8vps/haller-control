@@ -6,6 +6,8 @@
 #include <QColor>
 #include <QMessageBox>
 
+#include <SFML/Window/Joystick.hpp>
+
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
 
@@ -22,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     connecSignalsToSlots();
     setValidators();
     setIcons();
+
+    sf::Joystick::update();
 }
 
 MainWindow::~MainWindow()

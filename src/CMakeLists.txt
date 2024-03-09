@@ -5,10 +5,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find the Qt libraries.
-find_package(Qt6Network REQUIRED)
-find_package(Qt6Core REQUIRED)
-find_package(Qt6Widgets REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS Gui)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Gui)
 
 set(This haller-control)
 
@@ -40,4 +40,6 @@ add_executable(${This} ${Sources} ${Headers})
 
 target_link_libraries(${This} PUBLIC
     ${QtLibraries}
+    sfml-graphics
+    sfml-window
 )
