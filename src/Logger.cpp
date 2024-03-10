@@ -66,6 +66,6 @@ std::string Logger::getCurrentDateAndTime()
 //    std::stringstream stream;
 //    stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
 //    return stream.str();
-    return "";
+//    return "";
 }
 

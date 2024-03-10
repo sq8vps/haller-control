@@ -5,11 +5,13 @@
 #include <QValidator>
 #include <QColor>
 #include <QMessageBox>
+#include <QThread>
 
 #include <SFML/Window/Joystick.hpp>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
+#include "JoystickWorker.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -25,7 +27,19 @@ MainWindow::MainWindow(QWidget *parent)
     setValidators();
     setIcons();
 
-    sf::Joystick::update();
+
+
+
+    QThread* thread = new QThread;
+    JoystickWorker* worker = new JoystickWorker();
+    worker->moveToThread(thread);
+    //connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    connect(thread, SIGNAL(started()), worker, SLOT(process()));
+    connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
+
 }
 
 MainWindow::~MainWindow()
