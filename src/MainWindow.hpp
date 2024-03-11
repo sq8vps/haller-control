@@ -25,6 +25,7 @@ public:
 private slots:
     void handleUserInput(UserInputType inputType);
     void setLogText(QString textToLog, LogType logType);
+    void printGamepadDebugMessage(QString message);
     void saveLogsToFile();
 private:
     void setIcons();

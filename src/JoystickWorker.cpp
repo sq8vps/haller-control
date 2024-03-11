@@ -12,23 +12,34 @@ JoystickWorker::JoystickWorker(){}
 JoystickWorker::~JoystickWorker(){}
 
 void JoystickWorker::process(){
-    qDebug("siemka siemka");
 
-    sf::Window window(sf::VideoMode(), "SFML window");
+    sf::Window window(sf::VideoMode(), "xxx");
+    bool isVisible{false};
+    window.setVisible(isVisible);
+
     sf::Joystick::update();
+
     while (window.isOpen())
     {
-        // Event processing
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // Request for closing the window
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (sf::Joystick::isConnected(0))
+
+            // sfml window is only needed for handling joystick input
+            if (not sf::Joystick::isConnected(0))
+                window.close();
+
+            if (sf::Joystick::isButtonPressed(joystickNum, int(Button::A)))
             {
-                qDebug() << "dupsko";
+                emit gripperOpen();
             }
+            if (sf::Joystick::isButtonPressed(joystickNum, int(Button::X)))
+            {
+                emit gripperClose();
+            }
+
         }
         window.setActive();
         window.display();

@@ -14,5 +14,14 @@ public slots:
 signals:
     void finished();
     void error(QString err);
+    void gripperClose();
+    void gripperOpen();
+private:
+
+    constexpr static int joystickNum{0};
+    enum class Button : int
+    {
+        X, A, B, Y, LB, RB, LT, RT, Back, Start, LeftJ, RightJ
+    };
 };
 

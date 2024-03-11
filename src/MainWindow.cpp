@@ -36,6 +36,10 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
     connect(thread, SIGNAL(started()), worker, SLOT(process()));
     connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+
+    connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close");});
+    connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open");});
+
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
@@ -77,6 +81,12 @@ void MainWindow::setLogText(QString textToLog, LogType logType)
             break;
     }
     ui->logTextField->insertPlainText(textToLog);
+}
+
+void MainWindow::printGamepadDebugMessage(QString message)
+{
+    qDebug() << message;
+
 }
 
 void MainWindow::connecSignalsToSlots()
