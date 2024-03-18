@@ -11,17 +11,12 @@ JoystickWorker::JoystickWorker(){}
 
 JoystickWorker::~JoystickWorker(){}
 
-void JoystickWorker::process(){
-
-    sf::Window window(sf::VideoMode(), "xxx");
-    bool isVisible{false};
-    window.setVisible(isVisible);
+void JoystickWorker::process(sf::Window& window, sf::Event& event){
 
     sf::Joystick::update();
-
     while (window.isOpen())
     {
-        sf::Event event;
+        //sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -41,7 +36,7 @@ void JoystickWorker::process(){
             }
 
         }
-        window.setActive();
+        //window.setActive();
         window.display();
     }
 

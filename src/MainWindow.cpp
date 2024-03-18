@@ -8,6 +8,9 @@
 #include <QThread>
 
 #include <SFML/Window/Joystick.hpp>
+#include <SFML/Window/Window.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/VideoMode.hpp>
 
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
@@ -17,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // sfml window is needed only for handling joystick events
+    joystickWindow = new sf::Window(sf::VideoMode(), "xxx");
+    joystickWindow->setVisible(false);
+    joystickWindow->setActive(false);
+
     udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
     logger = Logger::getLogger();
@@ -27,27 +35,25 @@ MainWindow::MainWindow(QWidget *parent)
     setValidators();
     setIcons();
 
-
-
-
-    QThread* thread = new QThread;
-    JoystickWorker* worker = new JoystickWorker();
+    event = new sf::Event();
+    thread = new QThread;
+    worker = new JoystickWorker();
     worker->moveToThread(thread);
-    //connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
-    connect(thread, SIGNAL(started()), worker, SLOT(process()));
+
+    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    connect(thread, &QThread::started, worker, [this]{worker->process(*joystickWindow, *event);});
     connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
-
-    connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close");});
-    connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open");});
-
+    connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
+    connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
-
 }
 
 MainWindow::~MainWindow()
 {
+    delete thread;
+    delete worker;
     delete validator;
     delete ui;
 }
@@ -85,8 +91,7 @@ void MainWindow::setLogText(QString textToLog, LogType logType)
 
 void MainWindow::printGamepadDebugMessage(QString message)
 {
-    qDebug() << message;
-
+    ui->gamepadOutput->insertPlainText(message);
 }
 
 void MainWindow::connecSignalsToSlots()

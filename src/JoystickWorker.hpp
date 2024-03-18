@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <SFML/Window/Window.hpp>
 
 class JoystickWorker : public QObject
 {
@@ -9,7 +10,7 @@ public:
     JoystickWorker();
     ~JoystickWorker();
 public slots:
-    void process();
+    void process(sf::Window& window, sf::Event& event);
 
 signals:
     void finished();

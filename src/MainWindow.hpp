@@ -3,12 +3,16 @@
 #include "UdpNode.hpp"
 #include "Logger.hpp"
 #include "Definitions.hpp"
+#include "JoystickWorker.hpp"
 
 #include <QMainWindow>
+#include <SFML/Window/Window.hpp>
+#include <SFML/Window/Event.hpp>
 #include <QWidget>
 #include <QLineEdit>
 #include <QKeyEvent>
 #include <QRegularExpressionValidator>
+#include <QThread>
 
 #include <vector>
 
@@ -42,4 +46,8 @@ private:
     Logger *logger;
     Ui::MainWindow *ui;
     QTabWidget *tabWidget;
+    QThread *thread;
+    JoystickWorker *worker;
+    sf::Window *joystickWindow;
+    sf::Event* event;
 };
