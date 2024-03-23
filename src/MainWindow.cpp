@@ -20,11 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    // sfml window is needed only for handling joystick events
-    joystickWindow = new sf::Window(sf::VideoMode(), "xxx");
-    joystickWindow->setVisible(false);
-    joystickWindow->setActive(false);
-
     udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
     logger = Logger::getLogger();
@@ -35,13 +30,12 @@ MainWindow::MainWindow(QWidget *parent)
     setValidators();
     setIcons();
 
-    event = new sf::Event();
     thread = new QThread;
     worker = new JoystickWorker();
     worker->moveToThread(thread);
 
     connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
-    connect(thread, &QThread::started, worker, [this]{worker->process(*joystickWindow, *event);});
+    connect(thread, &QThread::started, worker, [this]{worker->process();});
     connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
     connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
     connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});

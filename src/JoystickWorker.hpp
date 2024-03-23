@@ -10,7 +10,7 @@ public:
     JoystickWorker();
     ~JoystickWorker();
 public slots:
-    void process(sf::Window& window, sf::Event& event);
+    void process();
 
 signals:
     void finished();

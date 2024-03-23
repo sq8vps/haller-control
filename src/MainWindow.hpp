@@ -48,6 +48,4 @@ private:
     QTabWidget *tabWidget;
     QThread *thread;
     JoystickWorker *worker;
-    sf::Window *joystickWindow;
-    sf::Event* event;
 };
