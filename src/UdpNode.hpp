@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Definitions.hpp"
-#include "Logger.hpp"
-
 #include <cstdint>
 #include <array>
+
 #include <QUdpSocket>
+
+#include "Definitions.hpp"
+#include "Logger.hpp"
 
 class UdpNode
 {

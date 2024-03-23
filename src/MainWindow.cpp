@@ -1,3 +1,5 @@
+#include "MainWindow.hpp"
+
 #include <array>
 #include <vector>
 
@@ -12,7 +14,6 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
 
-#include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
 #include "JoystickWorker.hpp"
 
@@ -23,24 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
     udpNode = std::make_shared<UdpNode>();
     ui->setupUi(this);
     logger = Logger::getLogger();
+    thread = new QThread;
+    worker = new JoystickWorker();
+    worker->moveToThread(thread);
 
     setWindowTitle(tr("Narwhal control panel"));
     initMotorButtons();
     connecSignalsToSlots();
     setValidators();
     setIcons();
-
-    thread = new QThread;
-    worker = new JoystickWorker();
-    worker->moveToThread(thread);
-
-    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
-    connect(thread, &QThread::started, worker, [this]{worker->process();});
-    connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
-    connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});
-    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
 }
 
@@ -77,6 +69,7 @@ void MainWindow::setLogText(QString textToLog, LogType logType)
             ui->logTextField->setTextColor("red");
             break;
         default:
+            // TODO in light mode text not visible - fix
             ui->logTextField->setTextColor("white");
             break;
     }
@@ -90,13 +83,31 @@ void MainWindow::printGamepadDebugMessage(QString message)
 
 void MainWindow::connecSignalsToSlots()
 {
+    handleUIButtonsSignals();
+    handleJoystickSignals();
+
+    QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
+}
+
+void MainWindow::handleJoystickSignals()
+{
+    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    connect(thread, &QThread::started, worker, [this]{worker->process();});
+    connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
+    connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});
+    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+}
+
+void MainWindow::handleUIButtonsSignals()
+{
     connect(ui->sendMotorDataButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::MotorControl);});
     connect(ui->gripperCloseButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperClose);});
     connect(ui->gripperOpenButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperOpen);});
     connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
 
     connect(ui->saveLogsButton, &QPushButton::released, this, &MainWindow::saveLogsToFile);
-    QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
 }
 
 void MainWindow::saveLogsToFile()

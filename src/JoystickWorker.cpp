@@ -1,11 +1,11 @@
+#include "JoystickWorker.hpp"
+
 #include <QDebug>
 
 #include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
-
-#include "JoystickWorker.hpp"
 
 JoystickWorker::JoystickWorker(){}
 
@@ -20,7 +20,6 @@ void JoystickWorker::process(){
 
     while (window.isOpen())
     {
-
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -43,6 +42,5 @@ void JoystickWorker::process(){
         }
         window.display();
     }
-
     emit finished();
 }

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Definitions.hpp"
-
 #include <QObject>
 #include <QString>
+
+#include "Definitions.hpp"
 
 class Logger : public QObject
 {

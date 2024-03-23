@@ -1,20 +1,18 @@
 #pragma once
 
-#include "UdpNode.hpp"
-#include "Logger.hpp"
-#include "Definitions.hpp"
-#include "JoystickWorker.hpp"
+#include <vector>
 
 #include <QMainWindow>
-#include <SFML/Window/Window.hpp>
-#include <SFML/Window/Event.hpp>
 #include <QWidget>
 #include <QLineEdit>
 #include <QKeyEvent>
 #include <QRegularExpressionValidator>
 #include <QThread>
 
-#include <vector>
+#include "UdpNode.hpp"
+#include "Logger.hpp"
+#include "Definitions.hpp"
+#include "JoystickWorker.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,6 +37,8 @@ private:
     void setValidators();
     void initMotorButtons();
     void clearMotorTextFields();
+    void handleJoystickSignals();
+    void handleUIButtonsSignals();
 
     std::vector<QLineEdit *> motorTextFields;
     std::shared_ptr<UdpNode> udpNode;

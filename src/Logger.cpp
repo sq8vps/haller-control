@@ -43,6 +43,7 @@ void Logger::log(QString textToLog, LogType logType)
     emit logSignal(textToLog, logType);
 }
 
+// TODO fix log savings
 void Logger::saveLogs(QString logs)
 {
 //    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));

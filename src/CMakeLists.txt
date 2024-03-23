@@ -19,7 +19,6 @@ set(Sources
     UdpNode.cpp
     UdpPacketMaker.cpp
     Logger.cpp
-    CustomJoystick.cpp
     JoystickWorker.cpp
     resource.qrc
 )
@@ -29,7 +28,6 @@ set(Headers
     UdpNode.hpp
     Definitions.hpp
     UdpPacketMaker.hpp
-    CustomJoystick.hpp
     JoystickWorker.hpp
     Logger.hpp
 )
