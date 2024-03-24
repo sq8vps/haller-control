@@ -43,30 +43,28 @@ void Logger::log(QString textToLog, LogType logType)
     emit logSignal(textToLog, logType);
 }
 
-// TODO fix log savings
 void Logger::saveLogs(QString logs)
 {
-//    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
-//    // files in windows should not contain ":"
-//    filename.replace(":", "-");
-//    // file is created in build directory
-//    QFile file(filename);
+   QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
+   // files in windows should not contain ":"
+   filename.replace(":", "-");
+   // file is created in build directory
+   QFile file(filename);
 
-//    if(file.open(QIODevice::WriteOnly))
-//    {
-//       QTextStream stream(&file);
-//       stream << logs;
-//    }
+   if(file.open(QIODevice::WriteOnly))
+   {
+      QTextStream stream(&file);
+      stream << logs;
+   }
 }
 
 std::string Logger::getCurrentDateAndTime()
 {
-//    auto now = std::chrono::system_clock::now();
-//    auto nowTime = std::chrono::system_clock::to_time_t(now);
+   auto now = std::chrono::system_clock::now();
+   auto nowTime = std::chrono::system_clock::to_time_t(now);
 
-//    std::stringstream stream;
-//    stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
-//    return stream.str();
-//    return "";
+   std::stringstream stream;
+   stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
+   return stream.str();
+   return "";
 }
-

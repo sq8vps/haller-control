@@ -17,6 +17,8 @@ signals:
     void error(QString err);
     void gripperClose();
     void gripperOpen();
+    void emergencyStop();
+    //void motorControl(uint8_t direction, float value);
 private:
 
     constexpr static int joystickNum{0};

@@ -14,11 +14,11 @@ JoystickWorker::~JoystickWorker(){}
 void JoystickWorker::process(){
 
     sf::Joystick::update();
-    sf::Window window(sf::VideoMode({800, 600}), "My window");
+    sf::Window window(sf::VideoMode({800, 600}), "Joystick window");
     window.setVisible(false);
-    window.setActive(false);
+    bool isWindowContextActivated = window.setActive(false);
 
-    while (window.isOpen())
+    while (window.isOpen() and isWindowContextActivated)
     {
         sf::Event event;
         while (window.pollEvent(event))
@@ -38,7 +38,11 @@ void JoystickWorker::process(){
             {
                 emit gripperClose();
             }
-
+            if(sf::Joystick::isButtonPressed(joystickNum, int(Button::RB)) or
+                sf::Joystick::isButtonPressed(joystickNum, int(Button::LB)))
+            {
+                emit emergencyStop();
+            }
         }
         window.display();
     }

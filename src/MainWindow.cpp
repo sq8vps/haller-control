@@ -96,6 +96,7 @@ void MainWindow::handleJoystickSignals()
     connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
     connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
     connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});
+    connect(worker, &JoystickWorker::emergencyStop, this, [this]{printGamepadDebugMessage("stop\n");});
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 }
@@ -163,4 +164,5 @@ void MainWindow::initMotorButtons()
     motorTextFields.push_back(ui->motor3);
     motorTextFields.push_back(ui->motor4);
     motorTextFields.push_back(ui->motor5);
+    motorTextFields.push_back(ui->motor6);
 }
