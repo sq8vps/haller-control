@@ -55,7 +55,6 @@ void MainWindow::setCameraIcons()
     int w = ui->leftCamera->width();
     int h = ui->leftCamera->height();
     ui->leftCamera->setPixmap(cameraPix.scaled(w, h));
-    ui->rightCamera->setPixmap(cameraPix.scaled(w, h));
 }
 
 void MainWindow::setLogText(QString textToLog, LogType logType)
@@ -78,6 +77,7 @@ void MainWindow::setLogText(QString textToLog, LogType logType)
 
 void MainWindow::printGamepadDebugMessage(QString message)
 {
+    ui->gamePadOutput->insertPlainText(message);
     ui->gamepadOutput->insertPlainText(message);
 }
 
