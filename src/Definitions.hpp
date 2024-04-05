@@ -3,6 +3,7 @@
 #include <cstdint>
 
 static constexpr uint8_t numOfMotors{6};
+static constexpr uint8_t numOfAxis{5};
 constexpr float pi = 3.1415927;
 constexpr float gripperOpen{2*pi};
 constexpr float gripperClose{pi};

@@ -97,6 +97,7 @@ void MainWindow::handleJoystickSignals()
     connect(worker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
     connect(worker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});
     connect(worker, &JoystickWorker::emergencyStop, this, [this]{printGamepadDebugMessage("stop\n");});
+    connect(worker, &JoystickWorker::motorControl, this, &MainWindow::printMotorControlData);
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 }
@@ -117,6 +118,17 @@ void MainWindow::saveLogsToFile()
     logger->saveLogs(logs);
     ui->logTextField->clear();
     QMessageBox::information(this, tr("Log info"), tr("Logs saved") );
+}
+
+void MainWindow::printMotorControlData(std::array<float, numOfAxis> forceVector)
+{
+    QString msg{"Force vector: ["};
+    for(const auto& val : forceVector)
+    {
+        msg += std::to_string(val) + "; ";
+    }
+    msg += "]\n";
+    printGamepadDebugMessage(msg);
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)

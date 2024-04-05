@@ -29,6 +29,7 @@ private slots:
     void setLogText(QString textToLog, LogType logType);
     void printGamepadDebugMessage(QString message);
     void saveLogsToFile();
+    void printMotorControlData(std::array<float, numOfAxis> forceVector);
 private:
     void setIcons();
     void setCameraIcons();
