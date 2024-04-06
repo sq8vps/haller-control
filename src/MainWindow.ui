@@ -64,6 +64,9 @@
        <property name="readOnly">
         <bool>true</bool>
        </property>
+       <property name="placeholderText">
+        <string>Press a button</string>
+       </property>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_2">
@@ -309,27 +312,6 @@
         <string>Motor 3</string>
        </property>
       </widget>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="gamePadTab">
-     <attribute name="title">
-      <string>Gamepad</string>
-     </attribute>
-     <widget class="QTextEdit" name="gamepadOutput">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>991</width>
-        <height>521</height>
-       </rect>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="placeholderText">
-       <string>Press a button</string>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="logsTab">

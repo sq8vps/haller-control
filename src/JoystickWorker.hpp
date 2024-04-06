@@ -8,6 +8,7 @@
 #include "Definitions.hpp"
 
 using ForceVector = std::array<float, numOfAxis>;
+
 class JoystickWorker : public QObject
 {
     Q_OBJECT

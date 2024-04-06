@@ -13,6 +13,7 @@
 #include "Logger.hpp"
 #include "Definitions.hpp"
 #include "JoystickWorker.hpp"
+#include "DataSendWorker.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,12 +34,13 @@ private slots:
 private:
     void setIcons();
     void setCameraIcons();
-    void connecSignalsToSlots();
+    void connectSignalsToSlots();
     void updateMotorValuesToSend(std::array<float, numOfMotors>& motorValues);
     void setValidators();
     void initMotorButtons();
     void clearMotorTextFields();
     void handleJoystickSignals();
+    void handleDataSendSignals();
     void handleUIButtonsSignals();
 
     std::vector<QLineEdit *> motorTextFields;
@@ -47,6 +49,8 @@ private:
     Logger *logger;
     Ui::MainWindow *ui;
     QTabWidget *tabWidget;
-    QThread *thread;
-    JoystickWorker *worker;
+    QThread *joystickInputThread;
+    JoystickWorker *joystickWorker;
+    QThread *dataSendThread;
+    DataSendWorker *dataSendWorker;
 };
