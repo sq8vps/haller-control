@@ -24,7 +24,7 @@ void DataSendWorker::process()
     emit finished();
 }
 
-void DataSendWorker::updateForceVector(const ForceVector& currentVector)
+void DataSendWorker::updateForceVector(const std::array<float, numOfAxis>& currentVector)
 {
     forceVector = currentVector;
 }

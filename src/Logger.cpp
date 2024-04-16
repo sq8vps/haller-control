@@ -7,6 +7,7 @@
 #include <QFile>
 
 Logger *Logger::logger = nullptr;
+std::mutex Logger::mutex;
 
 Logger::Logger()
 {
@@ -14,6 +15,7 @@ Logger::Logger()
 
 Logger* Logger::getLogger()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if(logger == nullptr)
     {
        logger = new Logger();
