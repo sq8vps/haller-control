@@ -24,9 +24,9 @@ signals:
     void gripperClose();
     void gripperOpen();
     void emergencyStop();
+    // TODO change names
     void motorControl(const ForceVector& forceVector);
 private:
-    // TODO change names
     ForceVector getCurrentForceVector();
 
     ForceVector previousForceVector{};

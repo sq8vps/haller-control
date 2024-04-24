@@ -48,7 +48,7 @@ void Logger::log(QString textToLog, LogType logType)
 void Logger::saveLogs(QString logs)
 {
    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
-   // files in windows should not contain ":"
+   // files in Windows should not contain ":"
    filename.replace(":", "-");
    // file is created in build directory
    QFile file(filename);
@@ -69,4 +69,10 @@ std::string Logger::getCurrentDateAndTime()
    stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
    return stream.str();
    return "";
+}
+
+Logger::~Logger()
+{
+    delete logger;
+    logger = nullptr;
 }

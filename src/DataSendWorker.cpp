@@ -12,13 +12,8 @@ void DataSendWorker::process()
     while(true)
     {
         auto x = std::chrono::steady_clock::now() + std::chrono::milliseconds(dataSendIntervalMs);
-        QString msg{"Force vector:\n ["};
-        for(const auto& val : forceVector)
-        {
-            msg += std::to_string(val) + "; ";
-        }
-        msg += "]\n";
-        qDebug() << msg;
+        // calculate
+        // send
         std::this_thread::sleep_until(x);
     }
     emit finished();

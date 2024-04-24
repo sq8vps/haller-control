@@ -19,7 +19,7 @@ set(Sources
     UdpNode.cpp
     UdpPacketMaker.cpp
     Logger.cpp
-    DataSendWorker.cpp
+
     JoystickWorker.cpp
     resource.qrc
 )
@@ -41,7 +41,8 @@ set(QtLibraries
         Qt${QT_VERSION_MAJOR}::Gui)
 
 add_executable(${This} ${Sources} ${Headers}
-    DataSendWorker.hpp DataSendWorker.cpp)
+    DataSendWorker.hpp
+    DataSendTimer.hpp DataSendTimer.cpp)
 
 target_link_libraries(${This} PUBLIC
     ${QtLibraries}

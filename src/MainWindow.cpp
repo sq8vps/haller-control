@@ -32,14 +32,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     joystickInputThread->start();
 
-    // thread that  periodically sends data
-    // TODO change thread to timer
-    dataSendThread = new QThread;
-    dataSendWorker = new DataSendWorker();
-    dataSendWorker->moveToThread(dataSendThread);
-
-    dataSendThread->start();
-
     setWindowTitle(tr("Narwhal control panel"));
     initMotorButtons();
     connectSignalsToSlots();
@@ -109,7 +101,7 @@ void MainWindow::handleJoystickSignals()
     connect(joystickWorker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
     connect(joystickWorker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});
     connect(joystickWorker, &JoystickWorker::emergencyStop, this, [this]{printGamepadDebugMessage("stop\n");});
-    connect(joystickWorker, &JoystickWorker::motorControl, this, &MainWindow::printMotorControlData);
+    connect(joystickWorker, &JoystickWorker::motorControl, &dataSendTimer, &DataSendTimer::updateForceVector);
 
     connect(joystickWorker, SIGNAL(finished()), joystickWorker, SLOT(deleteLater()));
     connect(joystickInputThread, SIGNAL(finished()), joystickInputThread, SLOT(deleteLater()));
@@ -117,12 +109,7 @@ void MainWindow::handleJoystickSignals()
 
 void MainWindow::handleDataSendSignals()
 {
-    connect(dataSendWorker, &DataSendWorker::error, this, [this]{printGamepadDebugMessage("Error while sending data!\n");});
-    connect(dataSendThread, &QThread::started, dataSendWorker, [this]{dataSendWorker->process();});
-    connect(dataSendWorker, SIGNAL(finished()), dataSendThread, SLOT(quit()));
-
-    connect(dataSendWorker, SIGNAL(finished()), dataSendWorker, SLOT(deleteLater()));
-    connect(dataSendThread, SIGNAL(finished()), dataSendThread, SLOT(deleteLater()));
+    connect(&dataSendTimer, &DataSendTimer::sendForceVector, this, &MainWindow::sendMotorValues);
 }
 
 void MainWindow::handleUIButtonsSignals()
@@ -135,25 +122,17 @@ void MainWindow::handleUIButtonsSignals()
     connect(ui->saveLogsButton, &QPushButton::released, this, &MainWindow::saveLogsToFile);
 }
 
+void MainWindow::sendMotorValues(const std::array<float, numOfMotors>& motorValues)
+{
+    udpNode->sendMessage(UserInputType::MotorControl, motorValues);
+}
+
 void MainWindow::saveLogsToFile()
 {
     QString logs{ui->logTextField->toPlainText()};
     logger->saveLogs(logs);
     ui->logTextField->clear();
     QMessageBox::information(this, tr("Log info"), tr("Logs saved") );
-}
-
-// todo fix this printing
-void MainWindow::printMotorControlData(std::array<float, numOfAxis> forceVector)
-{
-    QString msg{"Force vector:\n ["};
-    for(const auto& val : forceVector)
-    {
-        msg += std::to_string(val) + "; ";
-    }
-    msg += "]\n";
-    printGamepadDebugMessage(msg);
-    dataSendWorker->updateForceVector(forceVector);
 }
 
 void MainWindow::handleUserInput(UserInputType inputType)

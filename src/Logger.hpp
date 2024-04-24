@@ -27,6 +27,7 @@ signals:
 
 private:
     Logger();
+    ~Logger();
     std::string getCurrentDateAndTime();
 
     static Logger* logger;

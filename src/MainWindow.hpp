@@ -13,7 +13,7 @@
 #include "Logger.hpp"
 #include "Definitions.hpp"
 #include "JoystickWorker.hpp"
-#include "DataSendWorker.hpp"
+#include "DataSendTimer.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,7 +30,7 @@ private slots:
     void setLogText(QString textToLog, LogType logType);
     void printGamepadDebugMessage(QString message);
     void saveLogsToFile();
-    void printMotorControlData(std::array<float, numOfAxis> forceVector);
+    void sendMotorValues(const std::array<float, numOfMotors>& motorValues);
 private:
     void setIcons();
     void setCameraIcons();
@@ -51,6 +51,5 @@ private:
     QTabWidget *tabWidget;
     QThread *joystickInputThread;
     JoystickWorker *joystickWorker;
-    QThread *dataSendThread;
-    DataSendWorker *dataSendWorker;
+    DataSendTimer dataSendTimer;
 };
