@@ -1,7 +1,13 @@
 #pragma once
 
+#include <array>
+
 #include <QObject>
 #include <SFML/Window/Window.hpp>
+
+#include "Definitions.hpp"
+
+using ForceVector = std::array<float, numOfAxis>;
 
 class JoystickWorker : public QObject
 {
@@ -10,15 +16,20 @@ public:
     JoystickWorker();
     ~JoystickWorker();
 public slots:
-    void process(sf::Window& window, sf::Event& event);
+    void process();
 
 signals:
     void finished();
     void error(QString err);
     void gripperClose();
     void gripperOpen();
+    void emergencyStop();
+    // TODO change names
+    void motorControl(const ForceVector& forceVector);
 private:
+    ForceVector getCurrentForceVector();
 
+    ForceVector previousForceVector{};
     constexpr static int joystickNum{0};
     enum class Button : int
     {

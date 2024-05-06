@@ -7,6 +7,7 @@
 #include <QFile>
 
 Logger *Logger::logger = nullptr;
+std::mutex Logger::mutex;
 
 Logger::Logger()
 {
@@ -14,6 +15,7 @@ Logger::Logger()
 
 Logger* Logger::getLogger()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if(logger == nullptr)
     {
        logger = new Logger();
@@ -45,27 +47,32 @@ void Logger::log(QString textToLog, LogType logType)
 
 void Logger::saveLogs(QString logs)
 {
-//    QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
-//    // files in windows should not contain ":"
-//    filename.replace(":", "-");
-//    // file is created in build directory
-//    QFile file(filename);
+   QString filename = QString::fromUtf8(std::string("logs-" + getCurrentDateAndTime() + ".txt"));
+   // files in Windows should not contain ":"
+   filename.replace(":", "-");
+   // file is created in build directory
+   QFile file(filename);
 
-//    if(file.open(QIODevice::WriteOnly))
-//    {
-//       QTextStream stream(&file);
-//       stream << logs;
-//    }
+   if(file.open(QIODevice::WriteOnly))
+   {
+      QTextStream stream(&file);
+      stream << logs;
+   }
 }
 
 std::string Logger::getCurrentDateAndTime()
 {
-//    auto now = std::chrono::system_clock::now();
-//    auto nowTime = std::chrono::system_clock::to_time_t(now);
+   auto now = std::chrono::system_clock::now();
+   auto nowTime = std::chrono::system_clock::to_time_t(now);
 
-//    std::stringstream stream;
-//    stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
-//    return stream.str();
-//    return "";
+   std::stringstream stream;
+   stream << std::put_time(std::localtime(&nowTime), "%Y-%m-%d-%X");
+   return stream.str();
+   return "";
 }
 
+Logger::~Logger()
+{
+    delete logger;
+    logger = nullptr;
+}
