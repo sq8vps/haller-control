@@ -1,7 +1,7 @@
 #include "UdpPacketMaker.hpp"
 
 #include <QByteArray>
-#include <Qdebug>
+#include <QDebug>
 
 UdpPacketMaker::UdpPacketMaker() {}
 

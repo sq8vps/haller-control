@@ -2,10 +2,12 @@
 
 #include <cstdint>
 
-static constexpr uint8_t numOfMotors{5};
+static constexpr uint8_t numOfMotors{6};
+static constexpr uint8_t numOfAxis{5};
 constexpr float pi = 3.1415927;
 constexpr float gripperOpen{2*pi};
 constexpr float gripperClose{pi};
+constexpr uint32_t dataSendIntervalMs = 1000; // change to 50 when done
 
 enum class PacketType : uint8_t
 {

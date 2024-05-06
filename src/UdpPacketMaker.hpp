@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Definitions.hpp"
+#include <array>
 
 #include <QString>
-#include <array>
+
+#include "Definitions.hpp"
 
 class UdpPacketMaker
 {

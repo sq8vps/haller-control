@@ -18,3 +18,6 @@ add_subdirectory(src)
 # Enable testing and add tests folder.
 #enable_testing()
 #add_subdirectory(tests)
+
+set(BUILD_SHARED_LIBS FALSE)
+add_subdirectory(libs/SFML)

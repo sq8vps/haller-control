@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt6Network REQUIRED)
 find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS Gui)
+find_package(Qt6Gui REQUIRED)
 
 set(This haller-control)
 
@@ -19,6 +19,8 @@ set(Sources
     UdpNode.cpp
     UdpPacketMaker.cpp
     Logger.cpp
+    JoystickWorker.cpp
+    DataSendTimer.cpp
     resource.qrc
 )
 
@@ -27,6 +29,8 @@ set(Headers
     UdpNode.hpp
     Definitions.hpp
     UdpPacketMaker.hpp
+    DataSendTimer.hpp
+    JoystickWorker.hpp
     Logger.hpp
 )
 
@@ -36,8 +40,11 @@ set(QtLibraries
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Gui)
 
-add_executable(${This} ${Sources} ${Headers})
+add_executable(${This} ${Sources} ${Headers}
+)
 
 target_link_libraries(${This} PUBLIC
     ${QtLibraries}
+    sfml-graphics
+    sfml-window
 )

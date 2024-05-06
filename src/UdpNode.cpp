@@ -1,7 +1,8 @@
 #include "UdpNode.hpp"
-#include "UdpPacketMaker.hpp"
 
 #include <QString>
+
+#include "UdpPacketMaker.hpp"
 
 UdpNode::UdpNode(QString destinationAddress, uint16_t destinationPort)
     : destinationAddress(destinationAddress), destinationPort(destinationPort)
