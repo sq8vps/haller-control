@@ -4,6 +4,7 @@
 #include <QTimer>
 
 #include "Definitions.hpp"
+#include "Allocator.hpp"
 
 class DataSendTimer : public QObject
 {
@@ -19,5 +20,6 @@ signals:
 private:
     std::array<float, numOfAxis> currentForceVector;
     QTimer *timer;
+    Allocator allocator;
 };
 
