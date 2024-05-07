@@ -4,3 +4,6 @@
 [submodule "libs/sfml"]
 	path = libs/SFML
 	url = https://github.com/SFML/SFML.git
+[submodule "libs/eigen"]
+	path = libs/eigen
+	url = https://gitlab.com/libeigen/eigen.git
