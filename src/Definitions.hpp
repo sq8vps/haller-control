@@ -7,7 +7,7 @@ static constexpr uint8_t numOfAxis{5};
 constexpr float pi = 3.1415927;
 constexpr float gripperOpen{2*pi};
 constexpr float gripperClose{pi};
-constexpr uint32_t dataSendIntervalMs = 1000; // change to 50 when done
+constexpr uint32_t dataSendIntervalMs = 50; // change to 50 when done
 
 enum class PacketType : uint8_t
 {
