@@ -15,6 +15,7 @@ class JoystickWorker : public QObject
 public:
     JoystickWorker();
     ~JoystickWorker();
+    void setJoystickGain(float gain);
 public slots:
     void process();
 
@@ -35,5 +36,6 @@ private:
     {
         X, A, B, Y, LB, RB, LT, RT, Back, Start, LeftJ, RightJ
     };
+    float gain{1.f};
 };
 

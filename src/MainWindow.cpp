@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    joystickInputThread->exit();
     delete joystickWorker;
     delete joystickInputThread;
     delete validator;
@@ -182,3 +183,10 @@ void MainWindow::initMotorButtons()
     motorTextFields.push_back(ui->motor5);
     motorTextFields.push_back(ui->motor6);
 }
+
+void MainWindow::on_hsMotorGain_valueChanged(int value)
+{
+    joystickWorker->setJoystickGain(static_cast<float>(value) / 100.f);
+    ui->laMotorGain->setText(QString::number(static_cast<float>(value) / 100.f, 'f', 1));
+}
+

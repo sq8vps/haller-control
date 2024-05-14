@@ -31,6 +31,8 @@ private slots:
     void printGamepadDebugMessage(QString message);
     void saveLogsToFile();
     void sendMotorValues(const std::array<float, numOfMotors>& motorValues);
+    void on_hsMotorGain_valueChanged(int value);
+
 private:
     void setIcons();
     void setCameraIcons();

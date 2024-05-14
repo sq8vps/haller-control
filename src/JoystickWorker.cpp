@@ -56,15 +56,20 @@ ForceVector JoystickWorker::getCurrentForceVector()
 {
     ForceVector currentAxisPositions;
     // back and forth
-    currentAxisPositions.at(0) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::X) / 100.f;
+    currentAxisPositions.at(0) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::X) / 100.f * gain;
     // left and right
-    currentAxisPositions.at(1) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Y) / 100.f;
+    currentAxisPositions.at(1) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Y) / 100.f * gain;
     // up and down
-    currentAxisPositions.at(2) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::V) / 100.f;
+    currentAxisPositions.at(2) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::V) / 100.f * gain;
     // roll
-    currentAxisPositions.at(3) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::PovX) / 100.f;
+    currentAxisPositions.at(3) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::PovX) / 100.f * gain;
     // yaw
-    currentAxisPositions.at(4) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::PovY) / 100.f;
+    currentAxisPositions.at(4) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::PovY) / 100.f * gain;
 
     return currentAxisPositions;
+}
+
+void JoystickWorker::setJoystickGain(float gain)
+{
+    this->gain = gain;
 }
