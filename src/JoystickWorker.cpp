@@ -6,6 +6,7 @@
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
+#include <cmath>
 
 JoystickWorker::JoystickWorker(){}
 
@@ -56,15 +57,52 @@ ForceVector JoystickWorker::getCurrentForceVector()
 {
     ForceVector currentAxisPositions;
     // back and forth
-    currentAxisPositions.at(0) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::X) / 100.f;
+    currentAxisPositions.at(0) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::V) / 100.f;
     // left and right
-    currentAxisPositions.at(1) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Y) / 100.f;
+    currentAxisPositions.at(1) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::U) / 100.f;
     // up and down
-    currentAxisPositions.at(2) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::V) / 100.f;
+    currentAxisPositions.at(2) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Y) / 100.f;
     // roll
-    currentAxisPositions.at(3) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::PovX) / 100.f;
+    currentAxisPositions.at(3) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Z) / 100.f;
     // yaw
-    currentAxisPositions.at(4) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::PovY) / 100.f;
+    currentAxisPositions.at(4) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::X) / 100.f;
+
+    for(int i = 0; i < currentAxisPositions.size(); i++)
+    {
+        float x{currentAxisPositions.at(i)};
+        float absx{};
+        switch(equalization)
+        {
+            case SQUARE:
+                currentAxisPositions.at(i) = ((x < 0.f) ? -1.f : 1.f) * x * x * gain;
+                break;
+            case INVERSE_SQUARE:
+                absx = abs(x);
+                currentAxisPositions.at(i) = ((x < 0.f) ? -1.f : 1.f) * (1.f - pow(absx - 1.f, 2.f)) * gain;
+                break;
+            case CUBE:
+                currentAxisPositions.at(i) = x * x * x * gain;
+                break;
+            case INVERSE_CUBE:
+                absx = abs(x);
+                currentAxisPositions.at(i) = ((x < 0.f) ? -1.f : 1.f) * (1.f + pow(absx - 1.f, 3.f)) * gain;
+                break;
+            case LINEAR:
+            default:
+                currentAxisPositions.at(i) = x * gain;
+                break;
+        }
+    }
 
     return currentAxisPositions;
+}
+
+void JoystickWorker::setJoystickGain(float gain)
+{
+    this->gain = gain;
+}
+
+void JoystickWorker::setEqualization(JoystickWorker::Equalization e)
+{
+    equalization = e;
 }
