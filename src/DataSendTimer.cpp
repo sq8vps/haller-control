@@ -18,7 +18,7 @@ DataSendTimer::~DataSendTimer()
 
 void DataSendTimer::processAndSendVetctor()
 {
-    qDebug() << "timer is timing";
+   // qDebug() << "timer is timing";
     std::array<float, numOfMotors> calculatedForceVector{allocator.allocate(currentForceVector)};
     emit sendForceVector(calculatedForceVector);
 }

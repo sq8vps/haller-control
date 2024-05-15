@@ -13,9 +13,18 @@ class JoystickWorker : public QObject
 {
     Q_OBJECT
 public:
+    enum Equalization
+    {
+        LINEAR,
+        SQUARE,
+        CUBE,
+        INVERSE_SQUARE,
+        INVERSE_CUBE,
+    };
     JoystickWorker();
     ~JoystickWorker();
     void setJoystickGain(float gain);
+    void setEqualization(Equalization e);
 public slots:
     void process();
 
@@ -30,12 +39,13 @@ signals:
 private:
     ForceVector getCurrentForceVector();
 
-    ForceVector previousForceVector{};
+    ForceVector previousForceVector{0.f, 0.f, 0.f, 0.f, 0.f};
     constexpr static int joystickNum{0};
     enum class Button : int
     {
         X, A, B, Y, LB, RB, LT, RT, Back, Start, LeftJ, RightJ
     };
     float gain{1.f};
+    Equalization equalization{LINEAR};
 };
 

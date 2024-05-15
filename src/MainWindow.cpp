@@ -126,6 +126,12 @@ void MainWindow::handleUIButtonsSignals()
 void MainWindow::sendMotorValues(const std::array<float, numOfMotors>& motorValues)
 {
     udpNode->sendMessage(UserInputType::MotorControl, motorValues);
+    ui->leM1->setText(QString::number(motorValues[0], 'f', 3));
+    ui->leM2->setText(QString::number(motorValues[1], 'f', 3));
+    ui->leM3->setText(QString::number(motorValues[2], 'f', 3));
+    ui->leM4->setText(QString::number(motorValues[3], 'f', 3));
+    ui->leM5->setText(QString::number(motorValues[4], 'f', 3));
+    ui->leM6->setText(QString::number(motorValues[5], 'f', 3));
 }
 
 void MainWindow::saveLogsToFile()
@@ -188,5 +194,35 @@ void MainWindow::on_hsMotorGain_valueChanged(int value)
 {
     joystickWorker->setJoystickGain(static_cast<float>(value) / 100.f);
     ui->laMotorGain->setText(QString::number(static_cast<float>(value) / 100.f, 'f', 1));
+}
+
+
+void MainWindow::on_rbLinear_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::LINEAR);
+}
+
+
+void MainWindow::on_rbSquare_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::SQUARE);
+}
+
+
+void MainWindow::on_rbCube_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::CUBE);
+}
+
+
+void MainWindow::on_rbInverseSquare_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::INVERSE_SQUARE);
+}
+
+
+void MainWindow::on_rbInverseCube_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::INVERSE_CUBE);
 }
 
