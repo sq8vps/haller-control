@@ -35,6 +35,7 @@ void JoystickWorker::process(){
             {
                 emit gripperClose();
             }
+
             if(sf::Joystick::isButtonPressed(joystickNum, int(Button::RB)) or
                 sf::Joystick::isButtonPressed(joystickNum, int(Button::LB)))
             {
@@ -93,6 +94,12 @@ ForceVector JoystickWorker::getCurrentForceVector()
                 break;
         }
     }
+
+    if (sf::Joystick::isButtonPressed(joystickNum, int(Button::Y)))
+    {
+        zOffset = currentAxisPositions.at(2);
+    }
+    currentAxisPositions.at(2) += zOffset;
 
     return currentAxisPositions;
 }
