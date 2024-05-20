@@ -33,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
     joystickInputThread->start();
 
     setWindowTitle(tr("Narwhal control panel"));
-    initMotorButtons();
     connectSignalsToSlots();
     setValidators();
     setIcons();
@@ -42,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     joystickInputThread->exit();
+    joystickInputThread->terminate();
     delete joystickWorker;
     delete joystickInputThread;
     delete validator;
@@ -99,10 +99,12 @@ void MainWindow::handleJoystickSignals()
     connect(joystickInputThread, &QThread::started, joystickWorker, [this]{joystickWorker->process();});
     connect(joystickWorker, SIGNAL(finished()), joystickInputThread, SLOT(quit()));
 
-    connect(joystickWorker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("close\n");});
-    connect(joystickWorker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("open\n");});
+    connect(joystickWorker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("Closing gripper\n");});
+    connect(joystickWorker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("Opening gripper\n");});
     connect(joystickWorker, &JoystickWorker::emergencyStop, this, [this]{printGamepadDebugMessage("stop\n");});
     connect(joystickWorker, &JoystickWorker::motorControl, &dataSendTimer, &DataSendTimer::updateForceVector);
+    connect(joystickWorker, &JoystickWorker::setZtrim, this,
+            [this](float x){printGamepadDebugMessage("Z axis trim set to " + QString::number(x, 'f', 3) + "\n"); ui->leTrim->setText(QString::number(x, 'f', 3));});
 
     connect(joystickWorker, SIGNAL(finished()), joystickWorker, SLOT(deleteLater()));
     connect(joystickInputThread, SIGNAL(finished()), joystickInputThread, SLOT(deleteLater()));
@@ -115,10 +117,6 @@ void MainWindow::handleDataSendSignals()
 
 void MainWindow::handleUIButtonsSignals()
 {
-    connect(ui->sendMotorDataButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::MotorControl);});
-    connect(ui->gripperCloseButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperClose);});
-    connect(ui->gripperOpenButton, &QPushButton::pressed, this, [this]{handleUserInput(UserInputType::GripperOpen);});
-    connect(ui->stopButton, &QPushButton::released, this, [this]{handleUserInput(UserInputType::EmergencyStop);});
 
     connect(ui->saveLogsButton, &QPushButton::released, this, &MainWindow::saveLogsToFile);
 }
@@ -148,7 +146,6 @@ void MainWindow::handleUserInput(UserInputType inputType)
     if(inputType == UserInputType::MotorControl)
     {
         updateMotorValuesToSend(motorValues);
-        clearMotorTextFields();
     }
     udpNode->sendMessage(inputType, motorValues);
 }
@@ -158,14 +155,6 @@ void MainWindow::updateMotorValuesToSend(std::array<float, numOfMotors>& motorVa
     for(int i = 0; i < numOfMotors; ++i)
     {
         motorValues.at(i) = motorTextFields.at(i)->text().toFloat();
-    }
-}
-
-void MainWindow::clearMotorTextFields()
-{
-    for(const auto & field : motorTextFields)
-    {
-        field->clear();
     }
 }
 
@@ -180,20 +169,12 @@ void MainWindow::setValidators()
     }
 }
 
-void MainWindow::initMotorButtons()
-{
-    motorTextFields.push_back(ui->motor1);
-    motorTextFields.push_back(ui->motor2);
-    motorTextFields.push_back(ui->motor3);
-    motorTextFields.push_back(ui->motor4);
-    motorTextFields.push_back(ui->motor5);
-    motorTextFields.push_back(ui->motor6);
-}
 
 void MainWindow::on_hsMotorGain_valueChanged(int value)
 {
-    joystickWorker->setJoystickGain(static_cast<float>(value) / 100.f);
-    ui->laMotorGain->setText(QString::number(static_cast<float>(value) / 100.f, 'f', 1));
+    float x = static_cast<float>(value) / 100.f;
+    joystickWorker->setJoystickGain(x);
+    ui->laMotorGain->setText(QString::number(x, 'f', 1));
 }
 
 

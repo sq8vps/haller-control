@@ -34,6 +34,7 @@ signals:
     void gripperClose();
     void gripperOpen();
     void emergencyStop();
+    void setZtrim(float x);
     // TODO change names
     void motorControl(const ForceVector& forceVector);
 private:
@@ -46,6 +47,7 @@ private:
         X, A, B, Y, LB, RB, LT, RT, Back, Start, LeftJ, RightJ
     };
     float gain{1.f};
+    float zOffset{0.f};
     Equalization equalization{LINEAR};
 };
 

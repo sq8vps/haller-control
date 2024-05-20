@@ -31,6 +31,7 @@ private slots:
     void printGamepadDebugMessage(QString message);
     void saveLogsToFile();
     void sendMotorValues(const std::array<float, numOfMotors>& motorValues);
+
     void on_hsMotorGain_valueChanged(int value);
 
     void on_rbLinear_clicked();
@@ -49,8 +50,6 @@ private:
     void connectSignalsToSlots();
     void updateMotorValuesToSend(std::array<float, numOfMotors>& motorValues);
     void setValidators();
-    void initMotorButtons();
-    void clearMotorTextFields();
     void handleJoystickSignals();
     void handleDataSendSignals();
     void handleUIButtonsSignals();
