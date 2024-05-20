@@ -98,7 +98,7 @@ ForceVector JoystickWorker::getCurrentForceVector()
     if (sf::Joystick::isButtonPressed(joystickNum, int(Button::Y)))
     {
         zOffset = currentAxisPositions.at(2);
-        emit setZtrim(zOffset);
+        emit setZtrim(zOffset * 0.5f);
     }
     currentAxisPositions.at(2) += zOffset;
 

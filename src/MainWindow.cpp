@@ -177,3 +177,33 @@ void MainWindow::on_hsMotorGain_valueChanged(int value)
     ui->laMotorGain->setText(QString::number(x, 'f', 1));
 }
 
+
+void MainWindow::on_rbLinear_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::LINEAR);
+}
+
+
+void MainWindow::on_rbSquare_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::SQUARE);
+}
+
+
+void MainWindow::on_rbCube_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::CUBE);
+}
+
+
+void MainWindow::on_rbInverseSquare_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::INVERSE_SQUARE);
+}
+
+
+void MainWindow::on_rbInverseCube_clicked()
+{
+    joystickWorker->setEqualization(JoystickWorker::INVERSE_CUBE);
+}
+
