@@ -34,6 +34,7 @@ signals:
     void gripperClose();
     void gripperOpen();
     void emergencyStop();
+    void setZtrim(float x);
     // TODO change names
     void motorControl(const ForceVector& forceVector);
 private:

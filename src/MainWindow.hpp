@@ -31,17 +31,8 @@ private slots:
     void printGamepadDebugMessage(QString message);
     void saveLogsToFile();
     void sendMotorValues(const std::array<float, numOfMotors>& motorValues);
+
     void on_hsMotorGain_valueChanged(int value);
-
-    void on_rbLinear_clicked();
-
-    void on_rbSquare_clicked();
-
-    void on_rbCube_clicked();
-
-    void on_rbInverseSquare_clicked();
-
-    void on_rbInverseCube_clicked();
 
 private:
     void setIcons();
@@ -49,8 +40,6 @@ private:
     void connectSignalsToSlots();
     void updateMotorValuesToSend(std::array<float, numOfMotors>& motorValues);
     void setValidators();
-    void initMotorButtons();
-    void clearMotorTextFields();
     void handleJoystickSignals();
     void handleDataSendSignals();
     void handleUIButtonsSignals();
