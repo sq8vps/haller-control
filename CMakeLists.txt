@@ -20,4 +20,4 @@ add_subdirectory(src)
 #add_subdirectory(tests)
 
 set(BUILD_SHARED_LIBS FALSE)
-add_subdirectory(libs/SFML)
+add_subdirectory(libs/sfml)

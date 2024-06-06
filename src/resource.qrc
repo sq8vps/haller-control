@@ -2,5 +2,10 @@
     <qresource prefix="/resource">
         <file>img/button.png</file>
         <file>img/turtle.jpg</file>
+        <file>img/laser-warning.png</file>
+        <file>img/blank-led.png</file>
+        <file>img/green-led.png</file>
+        <file>img/red-led.png</file>
+        <file>img/yellow-led.png</file>
     </qresource>
 </RCC>

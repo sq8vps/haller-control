@@ -8,12 +8,14 @@
 #include <QKeyEvent>
 #include <QRegularExpressionValidator>
 #include <QThread>
+#include <QImage>
 
 #include "UdpNode.hpp"
 #include "Logger.hpp"
 #include "Definitions.hpp"
 #include "JoystickWorker.hpp"
 #include "DataSendTimer.hpp"
+#include "camerahandler.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -31,6 +33,8 @@ private slots:
     void printGamepadDebugMessage(QString message);
     void saveLogsToFile();
     void sendMotorValues(const std::array<float, numOfMotors>& motorValues);
+    void updateFrame(QImage image);
+    //void checkCamStatus(CameraHandler::CameraStatus cameraStatus);
 
     void on_hsMotorGain_valueChanged(int value);
 
@@ -44,15 +48,37 @@ private slots:
 
     void on_rbInverseCube_clicked();
 
+    void on_camColorMode_clicked();
+
+    void on_camLowLatencyMode_clicked();
+
+    void on_camNightVision_clicked();
+
+    void on_camDepthVision_clicked();
+
+    void updateCameraStatus(CameraWorker::CameraStatus cameraStatus);
+
+    void updateCameraTemperature(float temp);
+
+    void updateCameraCpuUsage(float cpuUsage);
+
+    void updateCameraLaserStatus(int laserStatus);
+
+signals:
+    void setCamMode(CameraWorker::CameraMode cameraMode);
+
 private:
     void setIcons();
     void setCameraIcons();
+
+    // void reconnectCam();
     void connectSignalsToSlots();
     void updateMotorValuesToSend(std::array<float, numOfMotors>& motorValues);
     void setValidators();
     void handleJoystickSignals();
     void handleDataSendSignals();
     void handleUIButtonsSignals();
+    void handleCameraSignals();
 
     std::vector<QLineEdit *> motorTextFields;
     std::shared_ptr<UdpNode> udpNode;
@@ -63,4 +89,5 @@ private:
     QThread *joystickInputThread;
     JoystickWorker *joystickWorker;
     DataSendTimer dataSendTimer;
+    CameraHandler *cameraHandler;
 };
