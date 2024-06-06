@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     joystickInputThread->start();
 
+    cameraHandler = new CameraHandler();
+
     setWindowTitle(tr("Narwhal control panel"));
     connectSignalsToSlots();
     setValidators();
@@ -61,6 +63,7 @@ void MainWindow::setCameraIcons()
     ui->leftCamera->setPixmap(cameraPix.scaled(w, h));
 }
 
+
 void MainWindow::setLogText(QString textToLog, LogType logType)
 {
     switch(logType)
@@ -89,6 +92,7 @@ void MainWindow::connectSignalsToSlots()
     handleUIButtonsSignals();
     handleJoystickSignals();
     handleDataSendSignals();
+    handleCameraSignals();
 
     QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
 }
@@ -121,6 +125,25 @@ void MainWindow::handleUIButtonsSignals()
     connect(ui->saveLogsButton, &QPushButton::released, this, &MainWindow::saveLogsToFile);
 }
 
+void MainWindow::handleCameraSignals()
+{
+    connect(cameraHandler, &CameraHandler::newFrame, this, &MainWindow::updateFrame);
+    connect(ui->camReconnectButton, &QPushButton::released, cameraHandler, &CameraHandler::reconnect);
+    connect(this, &MainWindow::setCamMode, cameraHandler, &CameraHandler::setMode);
+    connect(ui->camColorMode, &QRadioButton::toggled, this, &MainWindow::on_camColorMode_clicked);
+    connect(ui->camLowLatencyMode, &QRadioButton::toggled, this, &MainWindow::on_camLowLatencyMode_clicked);
+    connect(ui->camNightVision, &QRadioButton::toggled, this, &MainWindow::on_camNightVision_clicked);
+    connect(ui->camDepthVisionMode, &QRadioButton::toggled, this, &MainWindow::on_camDepthVision_clicked);
+
+    connect(cameraHandler, &CameraHandler::cameraStatus, this, &MainWindow::updateCameraStatus);
+    connect(cameraHandler, &CameraHandler::cameraTemperature, this, &MainWindow::updateCameraTemperature);
+    connect(cameraHandler, &CameraHandler::cameraCpuUsage, this, &MainWindow::updateCameraCpuUsage);
+    connect(cameraHandler, &CameraHandler::cameraLaserStatus, this, &MainWindow::updateCameraLaserStatus);
+
+    connect(cameraHandler, &CameraHandler::stopCamera, cameraHandler->worker, &CameraWorker::stop);
+    connect(cameraHandler, &CameraHandler::restartCamera, cameraHandler->worker, &CameraWorker::restart);
+}
+
 void MainWindow::sendMotorValues(const std::array<float, numOfMotors>& motorValues)
 {
     udpNode->sendMessage(UserInputType::MotorControl, motorValues);
@@ -130,6 +153,13 @@ void MainWindow::sendMotorValues(const std::array<float, numOfMotors>& motorValu
     ui->leM4->setText(QString::number(motorValues[3], 'f', 3));
     ui->leM5->setText(QString::number(motorValues[4], 'f', 3));
     ui->leM6->setText(QString::number(motorValues[5], 'f', 3));
+}
+
+void MainWindow::updateFrame(QImage image)
+{
+    int w = ui->leftCamera->width();
+    int h = ui->leftCamera->height();
+    ui->leftCamera->setPixmap(QPixmap::fromImage(image).scaled(w, h, Qt::KeepAspectRatio));
 }
 
 void MainWindow::saveLogsToFile()
@@ -205,5 +235,83 @@ void MainWindow::on_rbInverseSquare_clicked()
 void MainWindow::on_rbInverseCube_clicked()
 {
     joystickWorker->setEqualization(JoystickWorker::INVERSE_CUBE);
+}
+
+void MainWindow::on_camColorMode_clicked()
+{
+    emit setCamMode(CameraWorker::CameraMode::Color);
+}
+
+void MainWindow::on_camLowLatencyMode_clicked()
+{
+    emit setCamMode(CameraWorker::CameraMode::LowLatency);
+}
+
+void MainWindow::on_camNightVision_clicked() {
+    emit setCamMode(CameraWorker::CameraMode::NightVision);
+}
+
+void MainWindow::on_camDepthVision_clicked() {
+    emit setCamMode(CameraWorker::CameraMode::DepthVision);
+}
+
+void MainWindow::updateCameraStatus(CameraWorker::CameraStatus cameraStatus) {
+    int w;
+    int h;
+    QString path;
+
+    switch (cameraStatus) {
+    case CameraWorker::CameraStatus::Up:
+        path = ":/resource/img/green-led.png";
+        break;
+    case CameraWorker::CameraStatus::Down:
+        path = ":/resource/img/blank-led.png";
+        setCameraIcons();
+        break;
+    case CameraWorker::CameraStatus::Connecting:
+        path = ":/resource/img/yellow-led.png";
+        break;
+    case CameraWorker::CameraStatus::Error:
+        path = ":/resource/img/red-led.png";
+        setCameraIcons();
+        break;
+    default:
+        path = ":/resource/img/red-led.png";
+        setCameraIcons();
+        break;
+    }
+    QPixmap img(path);
+    w = ui->camStatus->width();
+    h = ui->camStatus->height();
+    ui->camStatus->setPixmap(img.scaled(w, h));
+}
+
+void MainWindow::updateCameraTemperature(float temp) {
+    ui->camTemp->display((int) temp);
+}
+
+void MainWindow::updateCameraCpuUsage(float cpuUsage) {
+    ui->camCpu->display((int) cpuUsage);
+}
+
+void MainWindow::updateCameraLaserStatus(int laserStatus) {
+    int w;
+    int h;
+    QString path;
+    switch(laserStatus) {
+    case 1:
+        path = ":/resource/img/red-led.png";
+        break;
+    case 0:
+        path = ":/resource/img/blank-led.png";
+        break;
+    default:
+        path = ":/resource/img/blank-led.png";
+    }
+
+    w = ui->camLaser->width();
+    h = ui->camLaser->height();
+    QPixmap img(path);
+    ui->camLaser->setPixmap(img.scaled(w, h));
 }
 

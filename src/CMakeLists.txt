@@ -10,6 +10,8 @@ find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 find_package(Qt6Gui REQUIRED)
 
+find_package(depthai CONFIG REQUIRED)
+
 set(This haller-control)
 
 set(Sources
@@ -23,6 +25,7 @@ set(Sources
     DataSendTimer.cpp
     Allocator.cpp
     resource.qrc
+    camerahandler.cpp
 )
 
 set(Headers
@@ -33,6 +36,7 @@ set(Headers
     DataSendTimer.hpp
     JoystickWorker.hpp
     Logger.hpp
+    camerahandler.h
 )
 
 set(QtLibraries
@@ -44,10 +48,13 @@ set(QtLibraries
 
 add_executable(${This} ${Sources} ${Headers}
     Allocator.hpp
+    cameraworker.h cameraworker.cpp
+
 )
 
 target_link_libraries(${This} PUBLIC
     ${QtLibraries}
     sfml-graphics
     sfml-window
+    depthai::opencv
 )
