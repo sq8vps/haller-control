@@ -23,24 +23,36 @@ void UdpNode::sendMessage(UserInputType inputType, std::array<float, numOfMotors
     logger->log(prepareLogMessage(inputType, motorValues), LogType::Inf);
 }
 
+void UdpNode::sendMessage(UserInputType inputType, uint8_t servoNumber, float servoValue)
+{
+    QByteArray data{UdpPacketMaker::makePacket(inputType, servoNumber, servoValue)};
+    socket->write(data);
+}
+
+void UdpNode::sendMessage(UserInputType inputType)
+{
+    QByteArray data{UdpPacketMaker::makePacket(inputType)};
+    socket->write(data);
+}
+
 QString UdpNode::prepareLogMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues)
 {
     // TODO make it less ugly
     QString logMsg = "UDP packet was sent. Packet type: ";
     switch(inputType)
     {
-    case UserInputType::GripperOpen:
-        logMsg += "servo control (id: " + QString::number(uint8_t(PacketType::ServoControl)) + "), "
-                + "packet data length: " + QString::number(uint8_t(DataLength::ServoControl))
-                + ", packet data: [" + QString::number(uint8_t(ServoNumber::GripperOpen)) + ", "
-                + QString::number(gripperOpen) + "]";
-        break;
-    case UserInputType::GripperClose:
-        logMsg += "servo control (id: " + QString::number(uint8_t(PacketType::ServoControl)) + "), "
-                + "packet length: " + QString::number(uint8_t(DataLength::ServoControl))
-                + ", packet data: [" + QString::number(uint8_t(ServoNumber::GripperClose)) + ", "
-                + QString::number(gripperClose) + "]";
-        break;
+    // case UserInputType::GripperOpen:
+    //     logMsg += "servo control (id: " + QString::number(uint8_t(PacketType::ServoControl)) + "), "
+    //             + "packet data length: " + QString::number(uint8_t(DataLength::ServoControl))
+    //             + ", packet data: [" + QString::number(uint8_t(ServoNumber::GripperOpen)) + ", "
+    //             + QString::number(gripperOpen) + "]";
+    //     break;
+    // case UserInputType::GripperClose:
+    //     logMsg += "servo control (id: " + QString::number(uint8_t(PacketType::ServoControl)) + "), "
+    //             + "packet length: " + QString::number(uint8_t(DataLength::ServoControl))
+    //             + ", packet data: [" + QString::number(uint8_t(ServoNumber::GripperClose)) + ", "
+    //             + QString::number(gripperClose) + "]";
+    //     break;
     case UserInputType::EmergencyStop:
         logMsg += "emergency stop (id: " + QString::number((uint8_t)PacketType::EmergencyStop) + "), "
                 + "packet length: " + QString::number(uint8_t(DataLength::EmergencyStop));

@@ -21,6 +21,16 @@ void JoystickWorker::process(){
 
     while (window.isOpen() and isWindowContextActivated)
     {
+        if(sf::Joystick::isButtonPressed(joystickNum, int(Button::RB)))
+        {
+            emit gripperControl(GripperTimer::CLOCKWISE);
+        }
+
+        if(sf::Joystick::isButtonPressed(joystickNum, int(Button::LB)))
+        {
+            emit gripperControl(GripperTimer::COUNTERCLOCKWISE);
+        }
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -34,12 +44,6 @@ void JoystickWorker::process(){
             if (sf::Joystick::isButtonPressed(joystickNum, int(Button::X)))
             {
                 emit gripperClose();
-            }
-
-            if(sf::Joystick::isButtonPressed(joystickNum, int(Button::RB)) or
-                sf::Joystick::isButtonPressed(joystickNum, int(Button::LB)))
-            {
-                emit emergencyStop();
             }
             ForceVector currentForceVector = getCurrentForceVector();
             // TODO test if this comparison works good

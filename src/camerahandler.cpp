@@ -17,6 +17,7 @@ CameraHandler::CameraHandler() {
 CameraHandler::~CameraHandler() {
     workerThread->quit();
     workerThread->wait();
+    workerThread->terminate();
 }
 
 void CameraHandler::reconnect() {
