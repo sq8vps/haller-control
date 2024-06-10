@@ -11,7 +11,7 @@
 class UdpNode
 {
 public:
-    UdpNode(QString destinationAddress = "192.168.69.100", uint16_t destinationPort = 25565);
+    UdpNode(QString destinationAddress = "169.254.1.69", uint16_t destinationPort = 25565);
     ~UdpNode();
     void sendMessage(UserInputType inputType, std::array<float, numOfMotors> motorValues);
     void sendMessage(UserInputType inputType, uint8_t servoNumber, float servoValue);
