@@ -7,5 +7,9 @@
         <file>img/green-led.png</file>
         <file>img/red-led.png</file>
         <file>img/yellow-led.png</file>
+        <file>img/collision-blank.png</file>
+        <file>img/collision-green.png</file>
+        <file>img/collision-orange.png</file>
+        <file>img/collision-red.png</file>
     </qresource>
 </RCC>

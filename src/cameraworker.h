@@ -23,10 +23,18 @@ public:
         Error
     };
 
+    enum CollisionState {
+        Ok,
+        Warning,
+        Critical,
+        Off
+    };
+
     CameraWorker(CameraMode mode);
     void setMode(CameraMode cameraMode);
 
 public slots:
+    void setCollision(bool collision_);
     void process();
 
     void stop();
@@ -38,6 +46,7 @@ signals:
     void cameraTemperature(float temp);
     void cameraCpuUsage(float cpuUsage);
     void cameraLaserStatus(int laserStatus);
+    void cameraCollision(CollisionState collisionState);
 
 
 private:
@@ -47,6 +56,7 @@ private:
     CameraMode cMode;
     void printSystemInformation(dai::SystemInformation info);
     bool running{true};
+    bool collision{false};
 };
 
 #endif // CAMERAWORKER_H

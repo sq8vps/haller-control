@@ -619,7 +619,7 @@
         <rect>
          <x>700</x>
          <y>60</y>
-         <width>271</width>
+         <width>211</width>
          <height>101</height>
         </rect>
        </property>
@@ -703,8 +703,8 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>53</width>
-            <height>48</height>
+            <width>50</width>
+            <height>45</height>
            </size>
           </property>
           <property name="baseSize">
@@ -748,6 +748,47 @@
          <widget class="QLCDNumber" name="camCpu"/>
         </item>
        </layout>
+      </widget>
+      <widget class="QCheckBox" name="camCollisionCheckbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>910</x>
+         <y>160</y>
+         <width>92</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Collision</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="camCollisionLabel">
+       <property name="geometry">
+        <rect>
+         <x>910</x>
+         <y>70</y>
+         <width>81</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="resource.qrc">:/resource/img/collision-blank.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
       </widget>
      </widget>
     </widget>
