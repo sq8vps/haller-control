@@ -30,18 +30,20 @@ MainWindow::MainWindow(QWidget *parent)
     joystickWorker = new JoystickWorker();
     joystickWorker->moveToThread(joystickInputThread);
 
-    joystickInputThread->start();
-
     cameraHandler = new CameraHandler();
+    gripperTimer = new GripperTimer();
 
     setWindowTitle(tr("Narwhal control panel"));
     connectSignalsToSlots();
     setValidators();
     setIcons();
+
+    joystickInputThread->start();
 }
 
 MainWindow::~MainWindow()
 {
+    joystickInputThread->quit();
     joystickInputThread->exit();
     joystickInputThread->terminate();
     delete joystickWorker;
@@ -95,6 +97,9 @@ void MainWindow::connectSignalsToSlots()
     handleCameraSignals();
 
     QObject::connect(logger, &Logger::logSignal, this, &MainWindow::setLogText);
+    QObject::connect(gripperTimer, &GripperTimer::send, this, [this](float x)
+                    {ui->leGripperAngle->setText(QString::number(x, 'f', 3));
+                            udpNode->sendMessage(UserInputType::GripperControl, GripperServoNumber, x);});
 }
 
 void MainWindow::handleJoystickSignals()
@@ -103,13 +108,22 @@ void MainWindow::handleJoystickSignals()
     connect(joystickInputThread, &QThread::started, joystickWorker, [this]{joystickWorker->process();});
     connect(joystickWorker, SIGNAL(finished()), joystickInputThread, SLOT(quit()));
 
-    connect(joystickWorker, &JoystickWorker::gripperClose, this, [this]{printGamepadDebugMessage("Closing gripper\n");});
-    connect(joystickWorker, &JoystickWorker::gripperOpen, this, [this]{printGamepadDebugMessage("Opening gripper\n");});
+    connect(joystickWorker, &JoystickWorker::gripperClose, this, [this]{
+        udpNode->sendMessage(UserInputType::GripperClose);
+        printGamepadDebugMessage("Closing gripper\n");
+        ui->cbGripperOpen->setChecked(false);
+        });
+    connect(joystickWorker, &JoystickWorker::gripperOpen, this, [this]{
+        udpNode->sendMessage(UserInputType::GripperOpen);
+        printGamepadDebugMessage("Opening gripper\n");
+        ui->cbGripperOpen->setChecked(true);
+    });
     connect(joystickWorker, &JoystickWorker::emergencyStop, this, [this]{printGamepadDebugMessage("stop\n");});
     connect(joystickWorker, &JoystickWorker::motorControl, &dataSendTimer, &DataSendTimer::updateForceVector);
     connect(joystickWorker, &JoystickWorker::setZtrim, this,
             [this](float x){printGamepadDebugMessage("Z axis trim set to " + QString::number(x, 'f', 3) + "\n"); ui->leTrim->setText(QString::number(x, 'f', 3));});
-
+    connect(joystickWorker, &JoystickWorker::gripperControl,
+            [this](GripperTimer::Direction direction){gripperTimer->updateRotation(direction);});
     connect(joystickWorker, SIGNAL(finished()), joystickWorker, SLOT(deleteLater()));
     connect(joystickInputThread, SIGNAL(finished()), joystickInputThread, SLOT(deleteLater()));
 }

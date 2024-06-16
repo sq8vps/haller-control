@@ -6,6 +6,7 @@
 #include <SFML/Window/Window.hpp>
 
 #include "Definitions.hpp"
+#include "grippertimer.hpp"
 
 using ForceVector = std::array<float, numOfAxis>;
 
@@ -35,6 +36,7 @@ signals:
     void gripperOpen();
     void emergencyStop();
     void setZtrim(float x);
+    void gripperControl(GripperTimer::Direction direction);
     // TODO change names
     void motorControl(const ForceVector& forceVector);
 private:

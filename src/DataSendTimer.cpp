@@ -6,6 +6,7 @@
 
 DataSendTimer::DataSendTimer()
 {
+    currentForceVector.fill(0.0f);
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(processAndSendVetctor()));
     timer->start(dataSendIntervalMs);
