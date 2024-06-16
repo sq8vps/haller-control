@@ -9,12 +9,11 @@ CameraWorker::CameraWorker(CameraMode cameraMode): cMode(cameraMode){
 
 void CameraWorker::process() {
     int ok_col = 2000;
-    int warning_col = 1000;
-    int critical_col = 300;
+    int warning_col = 1500;
+    int critical_col = 700;
 
     while(running) {
         bool col = collision;
-        std::cout<<col<<std::endl;
         switch (cMode) {
         case CameraMode::Color:
         {
@@ -61,13 +60,13 @@ void CameraWorker::process() {
 
                 auto slc = pipeline.create<dai::node::SpatialLocationCalculator>();
                 slc->inputConfig.setWaitForMessage(false);
-                for (int x = 0; x < 15; x++) {
-                    for (int y = 0; y < 9; y++) {
+                for (int x = 0; x < 10; x++) {
+                    for (int y = 0; y < 6; y++) {
                         dai::SpatialLocationCalculatorConfigData config;
                         config.depthThresholds.lowerThreshold = 200;
                         config.depthThresholds.upperThreshold = 10000;
-                        dai::Point2f topLeft(((float)x + 0.5)*0.0625, ((float)y +0.5)*0.1);
-                        dai::Point2f bottomRight(((float)x + 1.5)*0.0625, ((float)y +1.5)*0.1);
+                        dai::Point2f topLeft(((float)x + 0.5)*0.09, ((float)y +0.5)*0.15);
+                        dai::Point2f bottomRight(((float)x + 1.5)*0.09, ((float)y +1.5)*0.15);
                         config.roi = dai::Rect(topLeft, bottomRight);
                         config.calculationAlgorithm = dai::SpatialLocationCalculatorAlgorithm::MEDIAN;
                         slc->initialConfig.addROI(config);
@@ -92,7 +91,6 @@ void CameraWorker::process() {
 
                 if (col) {
                     collision = device->getOutputQueue("collision", 4, false);
-                    std::cout<<collision->getName()<<std::endl;
                 }
 
                 emit cameraStatus(CameraStatus::Up);
@@ -109,8 +107,10 @@ void CameraWorker::process() {
                     cv::Mat mat = imgFrame->getCvFrame();
 
                     if (col) {
-                        auto colIn = collision->get<dai::SpatialLocationCalculatorData>();
+                        auto colIn = collision->tryGet<dai::SpatialLocationCalculatorData>();
                         if (colIn) {
+                            int warn_sig = 0;
+                            int critical_sig = 0;
                             auto colData = colIn->getSpatialLocations();
                             for (auto col : colData) {
                                 auto roi = col.config.roi;
@@ -128,28 +128,35 @@ void CameraWorker::process() {
                                 if (distance == 0) {
                                     continue;
                                 } else if(distance < critical_col) {
-                                    emit cameraCollision(CameraWorker::CollisionState::Critical);
+                                    critical_sig++;
                                     color = std::make_shared<cv::Scalar>(0, 0, 255);
                                 } else if(distance < warning_col) {
-                                    emit cameraCollision(CameraWorker::CollisionState::Warning);
+                                    warn_sig++;
                                     color = std::make_shared<cv::Scalar>(0, 140, 255);
                                 } else {
-                                    emit cameraCollision(CameraWorker::CollisionState::Ok);
-                                    color = std::make_shared<cv::Scalar>(0, 255, 255);
+                                    continue;
                                 }
+
 
                                 cv::rectangle(mat, cv::Rect(cv::Point(xmin, ymin), cv::Point(xmax, ymax)), *color, cv::FONT_HERSHEY_SIMPLEX);
                                 std::stringstream depthX;
-                                depthX << distance << " m";
-                                cv::putText(mat, depthX.str(), cv::Point(xmin + 10, ymin + 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, *color);
+                                depthX << std::fixed << std::setprecision(2) << distance/1000 << " m";
+                                cv::putText(mat, depthX.str(), cv::Point(xmin + 10, ymin + 20), cv::FONT_HERSHEY_SIMPLEX, 0.3, *color, 0.2);
                             }
+
+                            if (critical_sig > 0) {
+                                emit cameraCollision(CollisionState::Critical);
+                            } else if (warn_sig > 0) {
+                                emit cameraCollision(CollisionState::Warning);
+                            } else {
+                                emit cameraCollision(CollisionState::Ok);
+                            }
+
                         }
-                        cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
-                        QImage qimg((const unsigned char*)mat.data, mat.cols, mat.rows, QImage::Format::Format_RGB888);
+                        QImage qimg((const unsigned char*)mat.data, mat.cols, mat.rows, QImage::Format::Format_BGR888);
                         emit newFrame(qimg);
                     } else {
-                        cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
-                        QImage qimg((const unsigned char*)mat.data, mat.cols, mat.rows, QImage::Format::Format_RGB888);
+                        QImage qimg((const unsigned char*)mat.data, mat.cols, mat.rows, QImage::Format::Format_BGR888);
                         emit newFrame(qimg);
                     }
 
@@ -158,8 +165,6 @@ void CameraWorker::process() {
                     auto systemLog = log->tryGet<dai::SystemInformation>();
 
                     if (systemLog) {
-
-
 
                         float tempArr[4] = {systemLog->chipTemperature.css, systemLog->chipTemperature.dss, systemLog->chipTemperature.mss, systemLog->chipTemperature.upa};
                         float maxTemp = *std::max_element(tempArr, tempArr + 4);
@@ -460,5 +465,4 @@ void CameraWorker::restart() {
 
 void CameraWorker::setCollision(bool collision_) {
     collision = collision_;
-    std::cout<<"WORKER "<<collision<<std::endl;
 }

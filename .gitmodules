@@ -7,3 +7,6 @@
 [submodule "libs/eigen"]
 	path = libs/eigen
 	url = https://gitlab.com/libeigen/eigen.git
+[submodule "libs/depthai-core"]
+	path = libs/depthai-core
+	url = https://github.com/luxonis/depthai-core.git

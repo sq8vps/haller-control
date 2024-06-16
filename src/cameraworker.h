@@ -32,9 +32,9 @@ public:
 
     CameraWorker(CameraMode mode);
     void setMode(CameraMode cameraMode);
+    void setCollision(bool collision_);
 
 public slots:
-    void setCollision(bool collision_);
     void process();
 
     void stop();

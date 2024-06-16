@@ -135,7 +135,7 @@ void MainWindow::handleCameraSignals()
     connect(ui->camNightVision, &QRadioButton::toggled, this, &MainWindow::on_camNightVision_clicked);
     connect(ui->camDepthVisionMode, &QRadioButton::toggled, this, &MainWindow::on_camDepthVision_clicked);
     connect(ui->camCollisionCheckbox, &QCheckBox::checkStateChanged, this, &MainWindow::on_camColision_switched);
-    connect(this, &MainWindow::setCollision, cameraHandler->worker, &CameraWorker::setCollision);
+    connect(this, &MainWindow::setCollision, cameraHandler, &CameraHandler::setCollision);
     connect(cameraHandler, &CameraHandler::cameraStatus, this, &MainWindow::updateCameraStatus);
     connect(cameraHandler, &CameraHandler::cameraTemperature, this, &MainWindow::updateCameraTemperature);
     connect(cameraHandler, &CameraHandler::cameraCpuUsage, this, &MainWindow::updateCameraCpuUsage);
@@ -249,23 +249,25 @@ void MainWindow::on_camLowLatencyMode_clicked()
 {
     emit setCamMode(CameraWorker::CameraMode::LowLatency);
     ui->camCollisionCheckbox->setEnabled(false);
+    ui->camCollisionCheckbox->setChecked(false);
     emit setCollision(false);
 }
 
 void MainWindow::on_camNightVision_clicked() {
     emit setCamMode(CameraWorker::CameraMode::NightVision);
-    ui->camCollisionCheckbox->setEnabled(true);
+    ui->camCollisionCheckbox->setEnabled(false);
+    ui->camCollisionCheckbox->setChecked(false);
     emit setCollision(false);
 }
 
 void MainWindow::on_camDepthVision_clicked() {
     emit setCamMode(CameraWorker::CameraMode::DepthVision);
-    ui->camCollisionCheckbox->setEnabled(true);
+    ui->camCollisionCheckbox->setEnabled(false);
+    ui->camCollisionCheckbox->setChecked(false);
     emit setCollision(false);
 }
 
 void MainWindow::on_camColision_switched(Qt::CheckState checkState){
-    std::cout<<"MAIN "<<checkState<<std::endl;
     if (checkState == Qt::Checked) {
         emit setCollision(true);
     } else {
