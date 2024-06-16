@@ -148,11 +148,13 @@ void MainWindow::handleCameraSignals()
     connect(ui->camLowLatencyMode, &QRadioButton::toggled, this, &MainWindow::on_camLowLatencyMode_clicked);
     connect(ui->camNightVision, &QRadioButton::toggled, this, &MainWindow::on_camNightVision_clicked);
     connect(ui->camDepthVisionMode, &QRadioButton::toggled, this, &MainWindow::on_camDepthVision_clicked);
-
+    connect(ui->camCollisionCheckbox, &QCheckBox::checkStateChanged, this, &MainWindow::on_camColision_switched);
+    connect(this, &MainWindow::setCollision, cameraHandler, &CameraHandler::setCollision);
     connect(cameraHandler, &CameraHandler::cameraStatus, this, &MainWindow::updateCameraStatus);
     connect(cameraHandler, &CameraHandler::cameraTemperature, this, &MainWindow::updateCameraTemperature);
     connect(cameraHandler, &CameraHandler::cameraCpuUsage, this, &MainWindow::updateCameraCpuUsage);
     connect(cameraHandler, &CameraHandler::cameraLaserStatus, this, &MainWindow::updateCameraLaserStatus);
+    connect(cameraHandler->worker, &CameraWorker::cameraCollision, this, &MainWindow::updateCameraCollision);
 
     connect(cameraHandler, &CameraHandler::stopCamera, cameraHandler->worker, &CameraWorker::stop);
     connect(cameraHandler, &CameraHandler::restartCamera, cameraHandler->worker, &CameraWorker::restart);
@@ -254,19 +256,37 @@ void MainWindow::on_rbInverseCube_clicked()
 void MainWindow::on_camColorMode_clicked()
 {
     emit setCamMode(CameraWorker::CameraMode::Color);
+    ui->camCollisionCheckbox->setEnabled(true);
 }
 
 void MainWindow::on_camLowLatencyMode_clicked()
 {
     emit setCamMode(CameraWorker::CameraMode::LowLatency);
+    ui->camCollisionCheckbox->setEnabled(false);
+    ui->camCollisionCheckbox->setChecked(false);
+    emit setCollision(false);
 }
 
 void MainWindow::on_camNightVision_clicked() {
     emit setCamMode(CameraWorker::CameraMode::NightVision);
+    ui->camCollisionCheckbox->setEnabled(false);
+    ui->camCollisionCheckbox->setChecked(false);
+    emit setCollision(false);
 }
 
 void MainWindow::on_camDepthVision_clicked() {
     emit setCamMode(CameraWorker::CameraMode::DepthVision);
+    ui->camCollisionCheckbox->setEnabled(false);
+    ui->camCollisionCheckbox->setChecked(false);
+    emit setCollision(false);
+}
+
+void MainWindow::on_camColision_switched(Qt::CheckState checkState){
+    if (checkState == Qt::Checked) {
+        emit setCollision(true);
+    } else {
+        emit setCollision(false);
+    }
 }
 
 void MainWindow::updateCameraStatus(CameraWorker::CameraStatus cameraStatus) {
@@ -323,9 +343,36 @@ void MainWindow::updateCameraLaserStatus(int laserStatus) {
         path = ":/resource/img/blank-led.png";
     }
 
-    w = ui->camLaser->width();
-    h = ui->camLaser->height();
+    w = ui->camCollisionLabel->width();
+    h = ui->camCollisionLabel->height();
     QPixmap img(path);
-    ui->camLaser->setPixmap(img.scaled(w, h));
+    ui->camCollisionLabel->setPixmap(img.scaled(w, h));
 }
 
+void MainWindow::updateCameraCollision(CameraWorker::CollisionState collisionState) {
+    int w;
+    int h;
+    QString path;
+    switch(collisionState) {
+    case CameraWorker::CollisionState::Off:
+        path = ":/resource/img/collision-blank.png";
+        break;
+    case CameraWorker::CollisionState::Ok:
+        path = ":/resource/img/collision-green.png";
+        break;
+    case CameraWorker::CollisionState::Warning:
+        path = ":/resource/img/collision-orange.png";
+        break;
+    case CameraWorker::CollisionState::Critical:
+        path = ":/resource/img/collision-red.png";
+        break;
+    default:
+        path = ":/resource/img/collision-blank.png";
+        break;
+    }
+
+    w = ui->camCollisionLabel->width();
+    h = ui->camCollisionLabel->height();
+    QPixmap img(path);
+    ui->camCollisionLabel->setPixmap(img.scaled(w, h));
+}

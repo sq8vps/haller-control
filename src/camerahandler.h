@@ -26,11 +26,13 @@ signals:
     void cameraCpuUsage(float cpuUsage);
     void cameraLaserStatus(int laserStatus);
     void setModeTW(CameraWorker::CameraMode cameraMode);
+    void setCollisionTW(bool collision);
     void stopCamera();
     void restartCamera();
 
 public slots:
     void setMode(CameraWorker::CameraMode cameraMode);
+    void setCollision(bool collision);
 
 private slots:
     void getFrameFW(QImage qimg);
@@ -42,6 +44,7 @@ private slots:
 
 private:
     CameraWorker::CameraMode cMode{CameraWorker::CameraMode::LowLatency};
+    bool collision{false};
     QThread* workerThread;
     bool stopped{false};
 

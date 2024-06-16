@@ -57,6 +57,8 @@ private slots:
 
     void on_camDepthVision_clicked();
 
+    void on_camColision_switched(Qt::CheckState checkState);
+
     void updateCameraStatus(CameraWorker::CameraStatus cameraStatus);
 
     void updateCameraTemperature(float temp);
@@ -65,8 +67,11 @@ private slots:
 
     void updateCameraLaserStatus(int laserStatus);
 
+    void updateCameraCollision(CameraWorker::CollisionState collisionState);
+
 signals:
     void setCamMode(CameraWorker::CameraMode cameraMode);
+    void setCollision(bool collision);
 
 private:
     void setIcons();

@@ -54,6 +54,11 @@ void CameraHandler::getCameraStatusFW(CameraWorker::CameraStatus cameraStatus) {
     emit CameraHandler::cameraStatus(cameraStatus);
 }
 
+void CameraHandler::setCollision(bool collision_) {
+    collision = collision_;
+    worker->setCollision(collision);
+}
+
 void CameraHandler::getCameraTemperatureFW(float temp) {
     emit CameraHandler::cameraTemperature(temp);
 }
