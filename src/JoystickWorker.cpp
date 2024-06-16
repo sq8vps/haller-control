@@ -68,7 +68,13 @@ ForceVector JoystickWorker::getCurrentForceVector()
     // up and down
     currentAxisPositions.at(2) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Y) / 100.f;
     // roll
+#ifdef __linux__
     currentAxisPositions.at(3) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Z) / 100.f;
+    currentAxisPositions.at(3) += sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::R) / 100.f;
+    currentAxisPositions.at(3) *= 0.5f;
+#else
+    currentAxisPositions.at(3) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Z) / 100.f;
+#endif
     // yaw
     currentAxisPositions.at(4) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::X) / 100.f;
 

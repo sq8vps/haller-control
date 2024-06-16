@@ -10,9 +10,7 @@ find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 find_package(Qt6Gui REQUIRED)
 
-IF(WIN32)
 set(depthai_DIR ${CMAKE_CURRENT_LIST_DIR}/../libs/depthai/build) #set path to your depthai package build folder
-ENDIF()
 
 find_package(depthai CONFIG REQUIRED)
 
