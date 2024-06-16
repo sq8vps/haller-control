@@ -21,6 +21,16 @@ void JoystickWorker::process(){
 
     while (window.isOpen() and isWindowContextActivated)
     {
+        if(sf::Joystick::isButtonPressed(joystickNum, int(Button::RB)))
+        {
+            emit gripperControl(GripperTimer::CLOCKWISE);
+        }
+
+        if(sf::Joystick::isButtonPressed(joystickNum, int(Button::LB)))
+        {
+            emit gripperControl(GripperTimer::COUNTERCLOCKWISE);
+        }
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -34,12 +44,6 @@ void JoystickWorker::process(){
             if (sf::Joystick::isButtonPressed(joystickNum, int(Button::X)))
             {
                 emit gripperClose();
-            }
-
-            if(sf::Joystick::isButtonPressed(joystickNum, int(Button::RB)) or
-                sf::Joystick::isButtonPressed(joystickNum, int(Button::LB)))
-            {
-                emit emergencyStop();
             }
             ForceVector currentForceVector = getCurrentForceVector();
             // TODO test if this comparison works good
@@ -64,7 +68,13 @@ ForceVector JoystickWorker::getCurrentForceVector()
     // up and down
     currentAxisPositions.at(2) = sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Y) / 100.f;
     // roll
+#ifdef __linux__
     currentAxisPositions.at(3) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Z) / 100.f;
+    currentAxisPositions.at(3) += sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::R) / 100.f;
+    currentAxisPositions.at(3) *= 0.5f;
+#else
+    currentAxisPositions.at(3) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::Z) / 100.f;
+#endif
     // yaw
     currentAxisPositions.at(4) = -sf::Joystick::getAxisPosition(joystickNum, sf::Joystick::Axis::X) / 100.f;
 

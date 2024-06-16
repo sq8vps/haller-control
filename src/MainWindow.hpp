@@ -16,6 +16,7 @@
 #include "JoystickWorker.hpp"
 #include "DataSendTimer.hpp"
 #include "camerahandler.h"
+#include "grippertimer.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -90,4 +91,5 @@ private:
     JoystickWorker *joystickWorker;
     DataSendTimer dataSendTimer;
     CameraHandler *cameraHandler;
+    GripperTimer *gripperTimer;
 };
