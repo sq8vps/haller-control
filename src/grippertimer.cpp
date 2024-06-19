@@ -18,11 +18,12 @@ void GripperTimer::updateRotation(GripperTimer::Direction direction)
                 angle -= (GripperFullRange / static_cast<float>(2 * GripperFullRangeTime / GripperRefreshTime));
                 break;
         }
-    }
-    if(angle > (GripperFullRange / 2.f))
-        angle = GripperFullRange / 2.f;
-    if(angle < (-GripperFullRange / 2.f))
-        angle = -GripperFullRange / 2.f;
 
-    emit send(angle);
+        if(angle > (GripperFullRange / 2.f))
+            angle = GripperFullRange / 2.f;
+        if(angle < (-GripperFullRange / 2.f))
+            angle = -GripperFullRange / 2.f;
+
+        emit send(angle);
+    }
 }
