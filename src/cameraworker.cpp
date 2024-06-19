@@ -362,7 +362,7 @@ void CameraWorker::process() {
             try {
                 device = std::make_shared<dai::Device>(pipeline);
 
-                bool laser = device->setIrLaserDotProjectorIntensity(1);
+                bool laser = false;
                 if (laser) {
                     emit cameraLaserStatus(1);
                 }
