@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1177</width>
-    <height>714</height>
+    <width>1708</width>
+    <height>967</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>0</y>
-      <width>1171</width>
-      <height>661</height>
+      <width>1691</width>
+      <height>841</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -38,8 +38,8 @@
        <rect>
         <x>0</x>
         <y>-11</y>
-        <width>1151</width>
-        <height>401</height>
+        <width>1681</width>
+        <height>561</height>
        </rect>
       </property>
       <widget class="QLabel" name="leftCamera">
@@ -47,15 +47,15 @@
         <rect>
          <x>0</x>
          <y>10</y>
-         <width>601</width>
-         <height>361</height>
+         <width>901</width>
+         <height>541</height>
         </rect>
        </property>
       </widget>
       <widget class="QTextEdit" name="gamePadOutput">
        <property name="geometry">
         <rect>
-         <x>600</x>
+         <x>1270</x>
          <y>10</y>
          <width>401</width>
          <height>361</height>
@@ -73,7 +73,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>380</y>
+        <y>560</y>
         <width>1161</width>
         <height>241</height>
        </rect>
@@ -796,7 +796,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1177</width>
+     <width>1708</width>
      <height>22</height>
     </rect>
    </property>
